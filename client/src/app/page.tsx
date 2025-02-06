@@ -1,11 +1,9 @@
+ 
 'use client'
-import { Button } from "@/styles/Button.style";
+import { Session } from '@/components/Session/Session';
 
 export default function Home() {
   return (
-   <div>
-    <h1>Start a session</h1>
-    <div><Button>Start session</Button></div>
-   </div>
+   <Session />
   );
 }
