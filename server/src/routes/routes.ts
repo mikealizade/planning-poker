@@ -1,10 +1,8 @@
-
-import express from 'express';
-const router = express.Router()
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient()
-import { Request, Response } from 'express';
-
+import express from "express";
+const router = express.Router();
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+import { Request, Response } from "express";
 
 // router.get('/fetchjobs', async (req, res) => {
 //   try {
@@ -15,25 +13,52 @@ import { Request, Response } from 'express';
 //   }
 // })
 
-router.post('/createSession', async (req: Request, res: Response) => {
-  const { sessionName } = req.body
+router.post("/createSession", async (req: Request, res: Response) => {
+  const { sessionName, host_id } = req.body;
 
   try {
     const sessions = await prisma.sessions.create({
       data: {
-        // id: '',        
-        host_id: 'guest',  
-        session_name: sessionName, 
-        // created_at: '', 
-        status: 'active',    
+        host_id: host_id ?? "guest",
+        session_name: sessionName,
+        status: "active",
       },
-    })
-    res.status(201).json(sessions)
+    });
+    res.status(201).json(sessions);
   } catch (error) {
-    console.log('🚀 ~ router.post ~ error:', error)
-    res.status(400).json({ error: error instanceof Error ? error.message : 'An unknown error occurred' })
+    console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
-})
+});
+
+router.post("/createParticipant", async (req: Request, res: Response) => {
+  const { id, session_id, participant_name, vote, has_voted, is_active, role } =
+    req.body;
+
+  try {
+    const participant = await prisma.participants.create({
+      data: {
+        id: id ?? "guest",
+        session_id,
+        participant_name,
+        vote,
+        has_voted,
+        is_active,
+        role,
+      },
+    });
+    res.status(201).json(participant);
+  } catch (error) {
+    console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+});
 
 // router.delete('/deletejob', async (req, res) => {
 //   const { id } = req.body

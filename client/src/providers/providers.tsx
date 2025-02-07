@@ -1,10 +1,37 @@
-"use client";
+'use client'
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createContext, useContext, useState } from 'react'
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+type SessionData = {
+  sessionId: string
+  sessionName: string
+  hostName: string
+}
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+type AppContextType = {
+  sessionData: SessionData
+  setSessionData: React.Dispatch<React.SetStateAction<SessionData>>
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined)
+
+export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
+  const queryClient = new QueryClient()
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
+
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [sessionData, setSessionData] = useState<SessionData>({ sessionId: '', sessionName: '', hostName: '' })
+  return <AppContext value={{ sessionData, setSessionData }}>{children}</AppContext>
+}
+
+export const useAppContext = () => {
+  const context = useContext(AppContext)
+
+  if (!context) {
+    throw new Error('useAppContext must be used within an AppContextProvider')
+  }
+
+  return context
 }

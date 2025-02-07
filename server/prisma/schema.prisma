@@ -21,8 +21,13 @@ model Sessions {
   status       String
 }
 
-// session_id (auto-generated UUID)
-// host_id (if authenticated)
-// created_at timestamp
-// status (e.g., 'active', 'completed')
-// session_settings (optional: voting method, timer settings, etc.)
+model Participants {
+  id               String   @id
+  session_id       String
+  participant_name String
+  vote             String
+  has_voted        Boolean
+  is_active        Boolean
+  role             String
+  joined_at        DateTime @default(now())
+}

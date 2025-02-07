@@ -1,9 +1,6 @@
- 
 'use client'
-import { Session } from '@/components/Session/Session';
+import { CreateSession } from '@/components/CreateSession/CreateSession'
 
 export default function Home() {
-  return (
-   <Session />
-  );
+  return <CreateSession />
 }
