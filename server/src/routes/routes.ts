@@ -3,22 +3,35 @@ const router = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { Request, Response } from "express";
+import { customAlphabet } from "nanoid";
 
-// router.get('/fetchjobs', async (req, res) => {
-//   try {
-//     const jobs = await prisma.job.findMany()
-//     res.json(jobs)
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to fetch jobs' })
-//   }
-// })
+router.get("/fetchSession/:sessionId", async (req, res) => {
+  const { sessionId } = req.params;
+  try {
+    const sessionData = await prisma.sessions.findUnique({
+      where: {
+        id: sessionId,
+      },
+    });
+    const participants = await prisma.participants.findMany({
+      where: {
+        session_id: sessionId,
+      },
+    });
+    res.json({ sessionData, participants });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch sessionData" });
+  }
+});
 
 router.post("/createSession", async (req: Request, res: Response) => {
+  const randomNumber = customAlphabet("1234567890", 6);
   const { sessionName, host_id } = req.body;
 
   try {
     const sessions = await prisma.sessions.create({
       data: {
+        id: randomNumber(),
         host_id: host_id ?? "guest",
         session_name: sessionName,
         status: "active",
@@ -35,14 +48,23 @@ router.post("/createSession", async (req: Request, res: Response) => {
 });
 
 router.post("/createParticipant", async (req: Request, res: Response) => {
-  const { id, session_id, participant_name, vote, has_voted, is_active, role } =
-    req.body;
+  const {
+    id,
+    session_id,
+    is_host,
+    participant_name,
+    vote,
+    has_voted,
+    is_active,
+    role,
+  } = req.body;
 
   try {
     const participant = await prisma.participants.create({
       data: {
         id: id ?? "guest",
         session_id,
+        is_host,
         participant_name,
         vote,
         has_voted,

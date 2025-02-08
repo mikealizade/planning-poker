@@ -5,8 +5,8 @@ import { createContext, useContext, useState } from 'react'
 
 type SessionData = {
   sessionId: string
-  sessionName: string
-  hostName: string
+  // sessionName: string
+  // hostName: string
 }
 
 type AppContextType = {
@@ -22,7 +22,7 @@ export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [sessionData, setSessionData] = useState<SessionData>({ sessionId: '', sessionName: '', hostName: '' })
+  const [sessionData, setSessionData] = useState<SessionData>({ sessionId: '' })
   return <AppContext value={{ sessionData, setSessionData }}>{children}</AppContext>
 }
 

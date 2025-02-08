@@ -14,8 +14,8 @@ datasource db {
 }
 
 model Sessions {
-  id           String   @id @default(uuid())
-  host_id      String
+  id           String   @id
+  host_id      String?
   session_name String
   created_at   DateTime @default(now())
   status       String
@@ -24,6 +24,7 @@ model Sessions {
 model Participants {
   id               String   @id
   session_id       String
+  is_host           Boolean
   participant_name String
   vote             String
   has_voted        Boolean
