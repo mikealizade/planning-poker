@@ -9,7 +9,7 @@ export const CreateSession = () => {
   const [sessionName, setSessionName] = useState('')
   // const [hostName, setHostName] = useState('')
   // const { sessionData } = useAppContext()
-  const createSessionMutation = useSession()
+  const { createSessionMutation } = useSession()
   // console.log('🚀 ~ CreateSession ~ sessionData:', sessionData)
 
   const onCreateSession = () => {

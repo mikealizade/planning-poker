@@ -24,6 +24,26 @@ router.get("/fetchSession/:sessionId", async (req, res) => {
   }
 });
 
+router.delete("/leaveSession", async (req: Request, res: Response) => {
+  const { id } = req.body;
+  console.log("🚀 ~ router.post ~ leave:", id);
+
+  try {
+    const participants = await prisma.participants.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(201).json(participants);
+  } catch (error) {
+    console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+});
+
 router.post("/createSession", async (req: Request, res: Response) => {
   const randomNumber = customAlphabet("1234567890", 6);
   const { sessionName, host_id } = req.body;
