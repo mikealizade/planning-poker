@@ -7,6 +7,7 @@ import { customAlphabet } from "nanoid";
 
 router.get("/fetchSession/:sessionId", async (req, res) => {
   const { sessionId } = req.params;
+
   try {
     const sessionData = await prisma.sessions.findUnique({
       where: {
@@ -24,9 +25,9 @@ router.get("/fetchSession/:sessionId", async (req, res) => {
   }
 });
 
-router.delete("/leaveSession", async (req: Request, res: Response) => {
-  const { id } = req.body;
-  console.log("🚀 ~ router.post ~ leave:", id);
+router.delete("/leaveSession/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log("🚀 ~ router.delete ~ id:", id);
 
   try {
     const participants = await prisma.participants.delete({
@@ -35,6 +36,26 @@ router.delete("/leaveSession", async (req: Request, res: Response) => {
       },
     });
     res.status(201).json(participants);
+  } catch (error) {
+    console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+});
+
+router.delete("/deleteSession/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log("🚀 ~ router.delete ~ id:", id);
+
+  try {
+    const session = await prisma.sessions.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(201).json(session);
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
     res.status(400).json({

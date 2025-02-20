@@ -6,11 +6,11 @@ import { Button } from '@/styles/Button.style'
 
 export const JoinSession = ({ sessionId }: { sessionId: string }) => {
   const [name, setName] = useState('')
-  const participantMutation = useParticipant({ sessionId })
+  const { createParticipantMutation } = useParticipant({ sessionId })
 
   const createParticipant = () => {
-    participantMutation.mutate({
-      id: `guest-${uuidv4()}`,
+    createParticipantMutation.mutate({
+      id: uuidv4(),
       session_id: sessionId,
       is_host: false,
       participant_name: name,
