@@ -71,8 +71,6 @@ io.on("connection", (socket) => {
     // return;
     socket.join(sessionId);
     addParticipant(sessionId, userId, participantName);
-    // console.log("🚀 ~ socket.on ~ sessions:", sessions.get(sessionId));
-    // console.log("🚀 ~ socket.on ~ joinSession sessionId:", sessionId);
     io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
   });
 
@@ -93,6 +91,24 @@ io.on("connection", (socket) => {
 
       io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId) ?? []);
       // socket.leave(sessionId);
+    }
+  });
+
+  socket.on("createVote", async ({ sessionId, participants }) => {
+    console.log("🚀 ~participants", participants);
+    if (sessions.has(sessionId)) {
+      console.log("🚀 ~ socket.on ~ createVote:", sessionId, participants);
+      // let participants = sessions.get(sessionId)!;
+      // participants = participants.map((p) => {
+      //   if (p.userId === userId) {
+      //     return { ...p, vote };
+      //   }
+      //   return p;
+      // }); // Correctly remove user
+      // console.log("🚀 ~ socket.on ~ participants:", participants);
+      sessions.set(sessionId, participants);
+
+      io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
     }
   });
 

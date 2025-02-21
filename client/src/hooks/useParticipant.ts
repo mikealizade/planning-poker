@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useWebSocket } from './useWebSocket'
 import type { Session } from './useSession'
+import { mapParticpants } from '@/utils/functions'
 
 export type Participant = {
   id: string
@@ -17,8 +18,15 @@ export type Participant = {
   role: string
 }
 
+type Vote = Pick<Participant, 'id' | 'session_id' | 'vote'>
+
 const createParticipant = async (participant: Participant): Promise<Participant> => {
   const response = await axios.post(`${apiUrl}/createParticipant`, participant)
+  return response.data
+}
+
+const createVote = async (vote: Vote): Promise<Participant> => {
+  const response = await axios.patch(`${apiUrl}/createVote`, vote)
   return response.data
 }
 
@@ -32,14 +40,14 @@ export const fetchParticipants = async ({
 }
 
 const deleteParticipant = async ({ id }: { id: string }): Promise<Participant> => {
-  const response = await axios.delete(`${apiUrl}/leaveSession/${id}`)
+  const response = await axios.delete(`${apiUrl}/deleteParticipant/${id}`)
   return response.data
 }
 
 export const useParticipant = ({ sessionId }: { sessionId: string }) => {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const { joinSession, leaveSession } = useWebSocket()
+  const { joinSession, leaveSession, makeVote } = useWebSocket()
 
   const createParticipantMutation = useMutation({
     mutationFn: createParticipant,
@@ -60,5 +68,14 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
     },
   })
 
-  return { createParticipantMutation, deleteParticipantMutation }
+  const voteMutation = useMutation({
+    mutationFn: createVote,
+    onSuccess: participants => {
+      console.log('🚀 ~ voteMutation ~ data:', participants)
+      queryClient.invalidateQueries({ queryKey: ['createVote'] })
+      makeVote({ sessionId, participants: mapParticpants(participants) })
+    },
+  })
+
+  return { createParticipantMutation, deleteParticipantMutation, voteMutation }
 }

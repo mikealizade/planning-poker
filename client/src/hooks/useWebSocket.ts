@@ -4,10 +4,11 @@ import { useCallback, useEffect } from 'react'
 import { io } from 'socket.io-client'
 
 type User = { sessionId: string; userId: string; participantName: string }
-export type Participant = Pick<User, 'userId' | 'participantName'>
+export type Participant = Pick<User, 'userId' | 'participantName'> & { vote: string }
 export type ParticipantDB = {
   id: string
   participant_name: string
+  vote: string
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI ?? process.env.NEXT_PUBLIC_LOCALHOST
@@ -35,6 +36,13 @@ export const useWebSocket = () => {
     }
   }
 
+  const makeVote = ({ sessionId, participants }: { sessionId: string; participants: ParticipantDB[] }) => {
+    // if (userId) {
+    console.log('🚀 Creating vote:', { sessionId, participants })
+    socket.emit('createVote', { sessionId, participants })
+    // }
+  }
+
   const endSession = useCallback(() => {
     setSessionData(defaultSession)
     socket.disconnect()
@@ -60,9 +68,9 @@ export const useWebSocket = () => {
         participants: updatedParticipants,
       }))
 
-      if (!updatedParticipants.length) {
-        endSession()
-      }
+      // if (!updatedParticipants.length) {
+      //   endSession()
+      // }
     }
 
     socket.on('sessionUpdated', handleSessionUpdate)
@@ -72,5 +80,5 @@ export const useWebSocket = () => {
     }
   }, [setSessionData, endSession])
 
-  return { joinSession, leaveSession }
+  return { joinSession, leaveSession, makeVote }
 }

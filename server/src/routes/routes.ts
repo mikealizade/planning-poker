@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { Request, Response } from "express";
 import { customAlphabet } from "nanoid";
@@ -22,26 +22,6 @@ router.get("/fetchSession/:sessionId", async (req, res) => {
     res.json({ sessionData, participants });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch sessionData" });
-  }
-});
-
-router.delete("/leaveSession/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  console.log("🚀 ~ router.delete ~ id:", id);
-
-  try {
-    const participants = await prisma.participants.delete({
-      where: {
-        id,
-      },
-    });
-    res.status(201).json(participants);
-  } catch (error) {
-    console.log("🚀 ~ router.post ~ error:", error);
-    res.status(400).json({
-      error:
-        error instanceof Error ? error.message : "An unknown error occurred",
-    });
   }
 });
 
@@ -123,20 +103,62 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
   }
 });
 
-// router.delete('/deletejob', async (req, res) => {
-//   const { id } = req.body
-//   console.log('🚀 ~ router.post ~ id:', id)
+router.patch("/createvote", async (req: Request, res: Response) => {
+  const { id, session_id, vote } = req.body;
 
-//   try {
-//     const todo = await prisma.job.delete({
-//       where: {
-//         id,
-//       },
-//     })
-//     res.status(201).json(todo)
-//   } catch (error) {
-//     res.status(400).json({ error: error.message })
-//   }
-// })
+  try {
+    const [_, participantsWithVotes] = await prisma.$transaction([
+      prisma.participants.updateMany({
+        where: {
+          id,
+          session_id,
+        },
+        data: {
+          vote,
+        },
+      }),
+      prisma.participants.findMany({
+        where: {
+          session_id,
+        },
+      }),
+    ]);
+
+    res.status(201).json(participantsWithVotes);
+  } catch (error) {
+    console.error("🚀 ~ router.patch ~ error:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      res.status(400).json({
+        error: `Prisma error: ${error.message}`,
+      });
+    } else {
+      res.status(500).json({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    }
+  }
+});
+
+router.delete("/deleteParticipant/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log("🚀 ~ router.delete ~ id:", id);
+
+  try {
+    const participants = await prisma.participants.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(201).json(participants);
+  } catch (error) {
+    console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+});
 
 export default router;

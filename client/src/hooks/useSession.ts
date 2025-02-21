@@ -4,7 +4,6 @@ import { apiUrl } from '@/components/CreateSession/CreateSession'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { Participant } from './useParticipant'
-// import { useWebSocket } from './useWebSocket'
 
 export type Session = {
   id: string
@@ -19,11 +18,6 @@ const createSession = async ({ sessionName }: { sessionName: string }): Promise<
   const response = await axios.post(`${apiUrl}/createSession`, { sessionName })
   return response.data
 }
-
-// const leaveSession = async ({ id }: { id: string }): Promise<Session> => {
-//   const response = await axios.delete(`${apiUrl}/leaveSession/${id}`)
-//   return response.data
-// }
 
 const deleteSession = async ({ id }: { id: string }): Promise<Session> => {
   const response = await axios.delete(`${apiUrl}/deleteSession/${id}`)
@@ -42,7 +36,6 @@ export const fetchSession = async ({
 export const useSession = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
-  // const { leaveSession: wsLeaveSession } = useWebSocket()
 
   const createSessionMutation = useMutation({
     mutationFn: createSession,
@@ -52,16 +45,6 @@ export const useSession = () => {
       router.push(`/join/${sessionId}`)
     },
   })
-
-  // const leaveSessionMutation = useMutation({
-  //   mutationFn: leaveSession,
-  //   onSuccess: data => {
-  //     console.log('🚀 ~ useSession ~ data:', data)
-  //     queryClient.invalidateQueries({ queryKey: ['leaveSession'] })
-  //     const sessionId = data.id
-  //     wsLeaveSession({ sessionId, userId: data.id, participantName: data.participant_name })
-  //   },
-  // })
 
   const deleteSessionMutation = useMutation({
     mutationFn: deleteSession,
