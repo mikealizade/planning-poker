@@ -10,6 +10,10 @@ export type ParticipantDB = {
   participant_name: string
   vote: string
 }
+type VotesData = {
+  isVotesVisible: boolean
+  isVotesCleared: boolean
+}
 
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI ?? process.env.NEXT_PUBLIC_LOCALHOST
 const socket = io(socketUrl)
@@ -38,7 +42,6 @@ export const useWebSocket = () => {
 
   const makeVote = ({ sessionId, participants }: { sessionId: string; participants: ParticipantDB[] }) => {
     // if (userId) {
-    console.log('🚀 Creating vote:', { sessionId, participants })
     socket.emit('createVote', { sessionId, participants })
     // }
   }
@@ -49,15 +52,13 @@ export const useWebSocket = () => {
     router.push('/')
   }, [router, setSessionData])
 
-  // const deleteSession = ({ sessionId, userId, participantName }: User) => {
-  //   console.log('🚀 Emitting leaveSession:', { sessionId, userId, participantName })
-  //   // const participants = prevData => ({
-  //   //   ...prevData,
-  //   //   participants: [...prevData.participants.filter(particpant => particpant.userId !== userId)],
-  //   // })
-  //   socket.emit('leaveSession', { sessionId, userId, participantName })
-  //   // socket.on('sessionUpdated', handleSessionUpdate(userId, participantName, false))
-  // }
+  const showVotes = ({ sessionId }: { sessionId: string }) => {
+    socket.emit('showVotes', { sessionId })
+  }
+
+  const clearVotes = ({ sessionId }: { sessionId: string }) => {
+    socket.emit('clearVotes', { sessionId })
+  }
 
   useEffect(() => {
     const handleSessionUpdate = (updatedParticipants: Participant[]) => {
@@ -68,17 +69,35 @@ export const useWebSocket = () => {
         participants: updatedParticipants,
       }))
 
-      // if (!updatedParticipants.length) {
-      //   endSession()
-      // }
+      if (!updatedParticipants.length) {
+        endSession()
+      }
     }
 
+    const handleShowVotes = ({ isVotesVisible, isVotesCleared }: VotesData) => {
+      console.log('🚀 ~ handleShowVotes ~ { isVotesVisible, isVotesCleared }:', { isVotesVisible, isVotesCleared })
+      setSessionData(prevData => ({
+        ...prevData,
+        isVotesVisible,
+        isVotesCleared,
+      }))
+    }
+
+    // const handleClearVotes = (isVotesCleared: boolean) => {
+    //   setSessionData(prevData => ({
+    //     ...prevData,
+    //     isVotesCleared,
+    //   }))
+    // }
+
     socket.on('sessionUpdated', handleSessionUpdate)
+    socket.on('showVotes', handleShowVotes)
+    socket.on('clearVotes', handleShowVotes)
 
     return () => {
       socket.off('sessionUpdated', handleSessionUpdate)
     }
   }, [setSessionData, endSession])
 
-  return { joinSession, leaveSession, makeVote }
+  return { joinSession, leaveSession, makeVote, showVotes, clearVotes }
 }

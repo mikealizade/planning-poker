@@ -4,7 +4,7 @@ import { fetchSession } from '@/hooks/useSession'
 import { useParticipant } from '@/hooks/useParticipant'
 import { Button } from '@/styles/Button.style'
 import { useAppContext } from '@/providers/providers'
-import type { Participant, ParticipantDB } from '@/hooks/useWebSocket'
+import { useWebSocket, type Participant, type ParticipantDB } from '@/hooks/useWebSocket'
 import Link from 'next/link'
 import { mapParticpants } from '@/utils/functions'
 
@@ -40,47 +40,60 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
     queryFn: () => fetchSession({ sessionId }),
     enabled: !!sessionId,
   })
+  const { showVotes, clearVotes } = useWebSocket()
+
   const {
-    sessionData: { participants: wsParticipants, currentUserId },
+    sessionData: { participants: wsParticipants, currentUserId, isVotesVisible, isVotesCleared },
   } = useAppContext()
   const { deleteParticipantMutation } = useParticipant({ sessionId })
-  // const participants = !dbParticipants.length ? [] : wsParticipants
-  // const participants = !wsParticipants.length && sessionData?.id ? mapParticpants(dbParticipants as ParticipantDB[]) : wsParticipants
-  // const participants = !dbParticipants.length ? mapParticpants(dbParticipants as ParticipantDB[]) : wsParticipants
-  const participants =
+  const participantsData =
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length
       ? mapParticpants(dbParticipants as ParticipantDB[])
       : wsParticipants
-  console.log('🚀 ~ CurrentSession ~ participants:', participants)
+  const userName = participantsData.find(({ userId }) => userId === currentUserId)?.participantName
 
+  console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
   const onLeaveSession = (id: string) => () => {
-    console.log(`🚀 Leaving session: ${sessionId}, User: ${id}`)
     deleteParticipantMutation.mutate({ id })
   }
-  const isVotesVisible = false
+
+  const onShowVotes = () => {
+    showVotes({ sessionId })
+  }
+
+  const onClearVotes = () => {
+    clearVotes({ sessionId })
+  }
+
   return (
     <>
+      <div> {userName}</div>
       <div>Session name: {sessionData?.session_name}</div>
       <div>Session id: {sessionId}</div>
       <div>
         <Link href='/'>Home</Link>
       </div>
+      <Button onClick={onShowVotes}>Show votes</Button>
+      <Button onClick={onClearVotes}>Cear votes</Button>
       <VotingButtons sessionId={sessionId} userId={currentUserId} />
       <div>
         Participants:
         <ul>
-          {participants?.map(({ userId, participantName, vote }: Participant) => {
-            const curentVote = vote ? (userId !== currentUserId ? (isVotesVisible ? vote : '?') : vote) : 'no vote'
+          {participantsData?.map(({ userId, participantName, vote }: Participant) => {
+            const curentVote = isVotesCleared
+              ? ''
+              : vote
+                ? userId !== currentUserId
+                  ? isVotesVisible
+                    ? vote
+                    : ' ? '
+                  : vote
+                : ' no vote '
             return (
               <li key={Math.random()}>
                 {participantName}
                 {curentVote}
-                {userId === currentUserId && (
-                  <>
-                    {/* {vote && <>Vote: {vote}</>} */}
-                    <Button onClick={onLeaveSession(userId)}>Leave session</Button>
-                  </>
-                )}
+                {userId === currentUserId && <Button onClick={onLeaveSession(userId)}>Leave session</Button>}
                 {}
               </li>
             )

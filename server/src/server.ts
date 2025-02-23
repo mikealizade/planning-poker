@@ -95,20 +95,33 @@ io.on("connection", (socket) => {
   });
 
   socket.on("createVote", async ({ sessionId, participants }) => {
-    console.log("🚀 ~participants", participants);
     if (sessions.has(sessionId)) {
-      console.log("🚀 ~ socket.on ~ createVote:", sessionId, participants);
-      // let participants = sessions.get(sessionId)!;
-      // participants = participants.map((p) => {
-      //   if (p.userId === userId) {
-      //     return { ...p, vote };
-      //   }
-      //   return p;
-      // }); // Correctly remove user
-      // console.log("🚀 ~ socket.on ~ participants:", participants);
+      console.log("🚀 ~ socket.on ~ sessionId:", sessionId);
+      console.log(
+        "🚀 ~ socket.on ~ sessions.has(sessionId):",
+        sessions.has(sessionId)
+      );
       sessions.set(sessionId, participants);
-
       io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
+    }
+  });
+
+  socket.on("showVotes", async ({ sessionId }) => {
+    if (sessions.has(sessionId)) {
+      io.to(sessionId).emit("showVotes", {
+        isVotesVisible: true,
+        isVotesCleared: false,
+      });
+    }
+  });
+
+  socket.on("clearVotes", async ({ sessionId }) => {
+    if (sessions.has(sessionId)) {
+      // io.to(sessionId).emit("clearVotes", true);
+      io.to(sessionId).emit("showVotes", {
+        isVotesVisible: false,
+        isVotesCleared: true,
+      });
     }
   });
 

@@ -9,6 +9,8 @@ type SessionData = {
   userId: string
   participants: Participant[]
   currentUserId: string
+  isVotesVisible: boolean
+  isVotesCleared: boolean
 }
 
 type AppContextType = {
@@ -18,7 +20,14 @@ type AppContextType = {
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
-export const defaultSession = { sessionId: '', userId: '', participants: [], currentUserId: '' }
+export const defaultSession = {
+  sessionId: '',
+  userId: '',
+  participants: [],
+  currentUserId: '',
+  isVotesVisible: false,
+  isVotesCleared: false,
+}
 
 export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient()
