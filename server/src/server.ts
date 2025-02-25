@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.send("Hello, Planning Poker!");
 });
 
-const server = createServer(app); // Create an HTTP server
+const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
@@ -42,8 +42,6 @@ const addParticipant = (
   userId: string,
   participantName: string
 ) => {
-  console.log("🚀 Adding participant:", { sessionId, userId, participantName });
-
   if (!sessions.has(sessionId)) {
     sessions.set(sessionId, []);
   }
@@ -53,17 +51,28 @@ const addParticipant = (
 
   if (!userExists) {
     participants.push({ userId, participantName });
-    sessions.set(sessionId, participants); // Ensure Map is updated
+    sessions.set(sessionId, participants);
   }
 
   console.log("🚀 Updated participants:", sessions.get(sessionId));
 };
 
 io.on("connection", (socket) => {
-  console.log("🚀 User connected:", socket.id);
+  console.log("🚀 User connected to socket:", socket.id);
 
-  // console.log(sessions.size);
-  // return;
+  socket.on("reconnectSession", async ({ userId }) => {
+    for (const [sessionId, participants] of sessions.entries()) {
+      const user = participants.find((p) => p.userId === userId);
+      if (user) {
+        socket.join(sessionId);
+        console.log(
+          `🔄 User ${userId} rejoined session ${sessionId} and socket ${socket.id}`
+        );
+        io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
+        return;
+      }
+    }
+  });
 
   socket.on("joinSession", async ({ sessionId, userId, participantName }) => {
     // sessions.clear();
@@ -75,13 +84,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leaveSession", async ({ sessionId, userId }) => {
-    console.log("🚀 User leaving session:", { sessionId, userId });
-    console.log("🚀 ~ socket.on ~ sessions:", sessions);
     console.log("🚀 ~ socket.on ~ sessionId:", sessionId);
+    console.log("🚀 ~ socket.on ~ socket.id:", socket.id);
+
     if (sessions.has(sessionId)) {
       let participants = sessions.get(sessionId)!;
-      participants = participants.filter((p) => p.userId !== userId); // Correctly remove user
-      console.log("🚀 ~ socket.on ~ participants:", participants);
+      participants = participants.filter((p) => p.userId !== userId);
       sessions.set(sessionId, participants);
 
       console.log(
@@ -90,17 +98,12 @@ io.on("connection", (socket) => {
       );
 
       io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId) ?? []);
-      // socket.leave(sessionId);
+      socket.leave(sessionId);
     }
   });
 
   socket.on("createVote", async ({ sessionId, participants }) => {
     if (sessions.has(sessionId)) {
-      console.log("🚀 ~ socket.on ~ sessionId:", sessionId);
-      console.log(
-        "🚀 ~ socket.on ~ sessions.has(sessionId):",
-        sessions.has(sessionId)
-      );
       sessions.set(sessionId, participants);
       io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
     }
@@ -110,29 +113,23 @@ io.on("connection", (socket) => {
     if (sessions.has(sessionId)) {
       io.to(sessionId).emit("showVotes", {
         isVotesVisible: true,
-        isVotesCleared: false,
       });
     }
   });
 
   socket.on("clearVotes", async ({ sessionId }) => {
     if (sessions.has(sessionId)) {
-      // io.to(sessionId).emit("clearVotes", true);
       io.to(sessionId).emit("showVotes", {
         isVotesVisible: false,
-        isVotesCleared: true,
       });
     }
   });
 
-  // socket.on("disconnect", () => {
-  //   const sessionId = socket.data.sessionId; // Retrieve stored sessionId
-  //   console.log("User disconnected:", socket.id, "from session:", sessionId);
-
-  // if (sessionId) {
-  //   io.in(sessionId).disconnectSockets(); // Disconnect all clients in the session
-  // }
-  // });
+  socket.on("disconnect", () => {
+    const sessionId = sessions.get(socket.id);
+    console.log("User disconnected:", socket.id, "from session:", sessionId);
+    sessions.delete(socket.id);
+  });
 });
 
 server.listen(PORT, () => {

@@ -110,7 +110,7 @@ router.patch("/createvote", async (req: Request, res: Response) => {
     const [_, participantsWithVotes] = await prisma.$transaction([
       prisma.participants.updateMany({
         where: {
-          id,
+          ...(!!vote && { id }),
           session_id,
         },
         data: {

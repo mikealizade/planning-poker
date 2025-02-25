@@ -2,15 +2,14 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createContext, useContext, useState } from 'react'
-import { Participant } from '@/hooks/useWebSocket'
+import { Participant } from '@/hooks/useParticipant'
 
 type SessionData = {
   sessionId: string
-  userId: string
+  // userId: string
   participants: Participant[]
-  currentUserId: string
+  currentUserId: string | undefined
   isVotesVisible: boolean
-  isVotesCleared: boolean
 }
 
 type AppContextType = {
@@ -22,11 +21,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const defaultSession = {
   sessionId: '',
-  userId: '',
+  // userId: '',
   participants: [],
-  currentUserId: '',
+  currentUserId: undefined,
   isVotesVisible: false,
-  isVotesCleared: false,
 }
 
 export const QueryProvider = ({ children }: { children: React.ReactNode }) => {

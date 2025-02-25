@@ -3,16 +3,11 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { io } from 'socket.io-client'
 
-type User = { sessionId: string; userId: string; participantName: string }
-export type Participant = Pick<User, 'userId' | 'participantName'> & { vote: string }
-export type ParticipantDB = {
-  id: string
-  participant_name: string
-  vote: string
-}
+export type User = { sessionId: string; userId: string; participantName: string }
+import { Participant } from './useParticipant'
+
 type VotesData = {
   isVotesVisible: boolean
-  isVotesCleared: boolean
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI ?? process.env.NEXT_PUBLIC_LOCALHOST
@@ -22,9 +17,17 @@ export const useWebSocket = () => {
   const router = useRouter()
   const { setSessionData } = useAppContext()
 
+  socket.on('connect', () => {
+    console.log('Connected to WebSocket:', socket.id)
+
+    const userId = window.sessionStorage.getItem('currentUserId')
+    if (userId) {
+      socket.emit('reconnectSession', { userId })
+    }
+  })
+
   const joinSession = ({ sessionId, userId, participantName }: User) => {
     if (userId) {
-      console.log('🚀 Emitting joinSession:', { sessionId, userId, participantName })
       socket.emit('joinSession', { sessionId, userId, participantName })
       setSessionData(prevData => ({
         ...prevData,
@@ -35,12 +38,11 @@ export const useWebSocket = () => {
 
   const leaveSession = ({ sessionId, userId, participantName }: User) => {
     if (userId) {
-      console.log('🚀 Emitting leaveSession:', { sessionId, userId, participantName })
       socket.emit('leaveSession', { sessionId, userId, participantName })
     }
   }
 
-  const makeVote = ({ sessionId, participants }: { sessionId: string; participants: ParticipantDB[] }) => {
+  const makeVote = ({ sessionId, participants }: { sessionId: string; participants: Participant[] }) => {
     // if (userId) {
     socket.emit('createVote', { sessionId, participants })
     // }
@@ -62,7 +64,7 @@ export const useWebSocket = () => {
 
   useEffect(() => {
     const handleSessionUpdate = (updatedParticipants: Participant[]) => {
-      console.log('🚀 Session updated:', updatedParticipants)
+      // console.log('🚀 Session updated:', updatedParticipants)
 
       setSessionData(prevData => ({
         ...prevData,
@@ -74,25 +76,16 @@ export const useWebSocket = () => {
       }
     }
 
-    const handleShowVotes = ({ isVotesVisible, isVotesCleared }: VotesData) => {
-      console.log('🚀 ~ handleShowVotes ~ { isVotesVisible, isVotesCleared }:', { isVotesVisible, isVotesCleared })
+    const handleVotes = ({ isVotesVisible }: VotesData) => {
       setSessionData(prevData => ({
         ...prevData,
         isVotesVisible,
-        isVotesCleared,
       }))
     }
 
-    // const handleClearVotes = (isVotesCleared: boolean) => {
-    //   setSessionData(prevData => ({
-    //     ...prevData,
-    //     isVotesCleared,
-    //   }))
-    // }
-
     socket.on('sessionUpdated', handleSessionUpdate)
-    socket.on('showVotes', handleShowVotes)
-    socket.on('clearVotes', handleShowVotes)
+    socket.on('showVotes', handleVotes)
+    socket.on('clearVotes', handleVotes)
 
     return () => {
       socket.off('sessionUpdated', handleSessionUpdate)

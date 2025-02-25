@@ -1,13 +1,11 @@
 'use client'
-import axios from 'axios'
-import { apiUrl } from '@/components/CreateSession/CreateSession'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useWebSocket } from './useWebSocket'
-import type { Session } from './useSession'
+import { User, useWebSocket } from './useWebSocket'
 import { mapParticpants } from '@/utils/functions'
+import * as api from '@/api/api'
 
-export type Participant = {
+export type ParticipantDB = {
   id: string
   session_id: string
   is_host: boolean
@@ -18,31 +16,7 @@ export type Participant = {
   role: string
 }
 
-type Vote = Pick<Participant, 'id' | 'session_id' | 'vote'>
-
-const createParticipant = async (participant: Participant): Promise<Participant> => {
-  const response = await axios.post(`${apiUrl}/createParticipant`, participant)
-  return response.data
-}
-
-const createVote = async (vote: Vote): Promise<Participant> => {
-  const response = await axios.patch(`${apiUrl}/createVote`, vote)
-  return response.data
-}
-
-export const fetchParticipants = async ({
-  sessionId,
-}: {
-  sessionId: string
-}): Promise<{ sessionData: Session; participants: Participant[] }> => {
-  const response = await axios.get(`${apiUrl}/fetchSession/${sessionId}`)
-  return response.data
-}
-
-const deleteParticipant = async ({ id }: { id: string }): Promise<Participant> => {
-  const response = await axios.delete(`${apiUrl}/deleteParticipant/${id}`)
-  return response.data
-}
+export type Participant = Pick<User, 'userId' | 'participantName'> & { vote: string }
 
 export const useParticipant = ({ sessionId }: { sessionId: string }) => {
   const queryClient = useQueryClient()
@@ -50,28 +24,27 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
   const { joinSession, leaveSession, makeVote } = useWebSocket()
 
   const createParticipantMutation = useMutation({
-    mutationFn: createParticipant,
+    mutationFn: api.createParticipant,
     onSuccess: data => {
-      console.log('🚀 ~ createParticipant ~ data:', data)
       queryClient.invalidateQueries({ queryKey: ['createParticipant'] })
       joinSession({ sessionId, userId: data.id, participantName: data.participant_name })
+      api.storeCurrentUserId(data.id)
       router.push(`/session/${sessionId}`)
     },
   })
 
   const deleteParticipantMutation = useMutation({
-    mutationFn: deleteParticipant,
+    mutationFn: api.deleteParticipant,
     onSuccess: data => {
-      console.log('🚀 ~ deleteParticipant ~ data:', data)
       queryClient.invalidateQueries({ queryKey: ['deleteParticipant'] })
       leaveSession({ sessionId, userId: data.id, participantName: data.participant_name })
+      api.deleteCurrentUserId()
     },
   })
 
   const voteMutation = useMutation({
-    mutationFn: createVote,
-    onSuccess: participants => {
-      console.log('🚀 ~ voteMutation ~ data:', participants)
+    mutationFn: api.createVote,
+    onSuccess: (participants: ParticipantDB[]) => {
       queryClient.invalidateQueries({ queryKey: ['createVote'] })
       makeVote({ sessionId, participants: mapParticpants(participants) })
     },
