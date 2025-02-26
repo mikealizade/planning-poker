@@ -1,9 +1,19 @@
 import { apiUrl } from '@/components/CreateSession/CreateSession'
 import { Participant, ParticipantDB } from '@/hooks/useParticipant'
 import axios from 'axios'
-import { Session } from 'inspector'
 
 type Vote = Pick<ParticipantDB, 'id' | 'session_id' | 'vote'>
+
+export type Session = {
+  id: string
+  host_id: string
+  hostName: string
+  session_name: string
+  created_at: Date
+  status: string
+}
+
+type FetchSession = { sessionData: Session; participants: Participant[]; votingType: string }
 
 export const createSession = async ({ sessionName }: { sessionName: string }): Promise<Session> => {
   const response = await axios.post(`${apiUrl}/createSession`, { sessionName })
@@ -15,11 +25,7 @@ export const deleteSession = async ({ id }: { id: string }): Promise<Session> =>
   return response.data
 }
 
-export const fetchSession = async ({
-  sessionId,
-}: {
-  sessionId: string
-}): Promise<{ sessionData: Session; participants: Participant[] }> => {
+export const fetchSession = async ({ sessionId }: { sessionId: string }): Promise<FetchSession> => {
   const response = await axios.get(`${apiUrl}/fetchSession/${sessionId}`)
   return response.data
 }
@@ -54,4 +60,8 @@ export const storeCurrentUserId = (currentUserId: string) => {
 
 export const deleteCurrentUserId = () => {
   window.sessionStorage.removeItem('currentUserId')
+}
+
+export const getCurrentUserId = () => {
+  window.sessionStorage.getItem('currentUserId')
 }
