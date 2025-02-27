@@ -1,7 +1,7 @@
 'use client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { createSession, deleteSession } from '@/api/api'
+import { createSession, deleteSession, updateSession } from '@/api/api'
 
 export const useSession = () => {
   const router = useRouter()
@@ -16,6 +16,15 @@ export const useSession = () => {
     },
   })
 
+  const updateSessionMutation = useMutation({
+    mutationFn: updateSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['updateSession'] })
+      // const sessionId = id
+      // router.push(`/join/${sessionId}`)
+    },
+  })
+
   const deleteSessionMutation = useMutation({
     mutationFn: deleteSession,
     onSuccess: () => {
@@ -23,5 +32,5 @@ export const useSession = () => {
     },
   })
 
-  return { createSessionMutation, deleteSessionMutation }
+  return { createSessionMutation, deleteSessionMutation, updateSessionMutation }
 }

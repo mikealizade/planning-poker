@@ -15,10 +15,10 @@ datasource db {
 
 model Sessions {
   id           String   @id
-  host_id      String?
   session_name String
   created_at   DateTime @default(now())
   status       String
+  votingType    String?
 }
 
 model Participants {

@@ -47,20 +47,42 @@ router.delete("/deleteSession/:id", async (req: Request, res: Response) => {
 
 router.post("/createSession", async (req: Request, res: Response) => {
   const randomNumber = customAlphabet("1234567890", 6);
-  const { sessionName, host_id } = req.body;
+  const { sessionName, votingType } = req.body;
 
   try {
     const sessions = await prisma.sessions.create({
       data: {
         id: randomNumber(),
-        host_id: host_id ?? "guest",
         session_name: sessionName,
+        votingType,
         status: "active",
       },
     });
     res.status(201).json(sessions);
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
+    res.status(400).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+});
+
+router.patch("/updateSession", async (req: Request, res: Response) => {
+  const { id, votingType } = req.body;
+
+  try {
+    const sessions = await prisma.sessions.update({
+      where: {
+        id,
+      },
+      data: {
+        votingType,
+      },
+    });
+    res.status(201).json(sessions);
+  } catch (error) {
+    console.log("🚀 ~ router.patch ~ error:", error);
     res.status(400).json({
       error:
         error instanceof Error ? error.message : "An unknown error occurred",

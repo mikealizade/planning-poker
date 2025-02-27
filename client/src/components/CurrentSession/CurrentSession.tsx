@@ -8,49 +8,29 @@ import { type Participant } from '@/hooks/useParticipant'
 import Link from 'next/link'
 import { mapParticpants } from '@/utils/functions'
 import { fetchSession, getCurrentUserId } from '@/api/api'
-import { useState } from 'react'
 
-const votingOptions: Record<string, string[]> = {
+type VotingOptions = Record<string, string[]>
+
+const votingOptions: VotingOptions = {
   fibonacci: ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'],
   'modified fibonacci': ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?', '☕'],
   tshirt: ['XS', 'S', 'M', 'L', 'XL', '12'],
   'create custom deck': [''],
 }
 
-const VotingButtons = ({ createVote, dbVotingType = '' }: { createVote: (vote: string) => void; dbVotingType?: string }) => {
-  const [votingType, setVotingType] = useState(dbVotingType)
-  console.log('🚀 ~ votingType:', votingType)
-
+const VotingButtons = ({ createVote, votingType = '' }: { createVote: (vote: string) => void; votingType: string }) => {
   const onVote = (vote: string) => () => {
     createVote(vote)
   }
 
-  const onSelectVotingType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const target = e.target.value
-    if (target === 'custom') return
-    setVotingType(target)
-  }
-
   return (
-    <>
-      <select onChange={onSelectVotingType}>
-        <option value=''>Select</option>
-        {Object.keys(votingOptions).map(option => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      {votingType && (
-        <ul>
-          {votingOptions[votingType as keyof typeof votingOptions].map((vote: string) => (
-            <li key={vote}>
-              <button onClick={onVote(vote)}>{vote}</button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
+    <ul>
+      {votingOptions[votingType as keyof VotingOptions]?.map((vote: string) => (
+        <li key={vote}>
+          <button onClick={onVote(vote)}>{vote}</button>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -69,7 +49,7 @@ const VotesSummary = ({ data }: { data: Participant[] }) => {
 }
 
 export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
-  const { data: { sessionData, participants: dbParticipants = [], votingType: dbVotingType } = {} } = useQuery({
+  const { data: { sessionData, participants: dbParticipants = [] } = {} } = useQuery({
     queryKey: ['fetchSession', sessionId],
     queryFn: () => fetchSession({ sessionId }),
     enabled: !!sessionId,
@@ -115,7 +95,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
       </div>
       <Button onClick={onShowVotes}>Show votes</Button>
       <Button onClick={onClearVotes}>Cear votes</Button>
-      <VotingButtons createVote={createVote} dbVotingType={dbVotingType} />
+      {sessionData?.votingType && <VotingButtons createVote={createVote} votingType={sessionData.votingType} />}
       <div>
         Participants:
         <ul>

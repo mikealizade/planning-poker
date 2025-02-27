@@ -6,17 +6,22 @@ type Vote = Pick<ParticipantDB, 'id' | 'session_id' | 'vote'>
 
 export type Session = {
   id: string
-  host_id: string
   hostName: string
   session_name: string
   created_at: Date
   status: string
+  votingType: string
 }
 
 type FetchSession = { sessionData: Session; participants: Participant[]; votingType: string }
 
-export const createSession = async ({ sessionName }: { sessionName: string }): Promise<Session> => {
-  const response = await axios.post(`${apiUrl}/createSession`, { sessionName })
+export const createSession = async ({ sessionName, votingType }: { sessionName: string; votingType?: string }): Promise<Session> => {
+  const response = await axios.post(`${apiUrl}/createSession`, { sessionName, votingType })
+  return response.data
+}
+
+export const updateSession = async ({ id, votingType }: { id: string; votingType?: string }): Promise<Session> => {
+  const response = await axios.patch(`${apiUrl}/updateSession`, { id, votingType })
   return response.data
 }
 
