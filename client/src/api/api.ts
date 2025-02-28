@@ -58,15 +58,3 @@ export const deleteParticipant = async ({ id }: { id: string }): Promise<Partici
   const response = await axios.delete(`${apiUrl}/deleteParticipant/${id}`)
   return response.data
 }
-
-export const storeCurrentUserId = (currentUserId: string) => {
-  window.sessionStorage.setItem('currentUserId', currentUserId)
-}
-
-export const deleteCurrentUserId = () => {
-  window.sessionStorage.removeItem('currentUserId')
-}
-
-export const getCurrentUserId = () => {
-  window.sessionStorage.getItem('currentUserId')
-}

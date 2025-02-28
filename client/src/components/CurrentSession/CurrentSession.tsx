@@ -7,46 +7,10 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import { type Participant } from '@/hooks/useParticipant'
 import Link from 'next/link'
 import { mapParticpants } from '@/utils/functions'
-import { fetchSession, getCurrentUserId } from '@/api/api'
-
-type VotingOptions = Record<string, string[]>
-
-const votingOptions: VotingOptions = {
-  fibonacci: ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'],
-  'modified fibonacci': ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?', '☕'],
-  tshirt: ['XS', 'S', 'M', 'L', 'XL', '12'],
-  'create custom deck': [''],
-}
-
-const VotingButtons = ({ createVote, votingType = '' }: { createVote: (vote: string) => void; votingType: string }) => {
-  const onVote = (vote: string) => () => {
-    createVote(vote)
-  }
-
-  return (
-    <ul>
-      {votingOptions[votingType as keyof VotingOptions]?.map((vote: string) => (
-        <li key={vote}>
-          <button onClick={onVote(vote)}>{vote}</button>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-const VotesSummary = ({ data }: { data: Participant[] }) => {
-  const votes = Object.groupBy(data, ({ vote }) => vote)
-
-  return (
-    <ul>
-      {Object.entries(votes).map(([key, value]) => (
-        <li key={key}>
-          {key} <strong>{value!.length}</strong>
-        </li>
-      ))}
-    </ul>
-  )
-}
+import { fetchSession } from '@/api/api'
+import { getCurrentUserId } from '@/utils/storage'
+import { VotesSummary } from '../VotesSummary/VotesSummary'
+import { VotingButtons } from '../VotingButtons/VotingButtons'
 
 export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { data: { sessionData, participants: dbParticipants = [] } = {} } = useQuery({
@@ -86,7 +50,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   }
 
   return (
-    <>
+    <main>
       <div> {userName}</div>
       <div>Session name: {sessionData?.session_name}</div>
       <div>Session id: {sessionId}</div>
@@ -94,7 +58,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
         <Link href='/'>Home</Link>
       </div>
       <Button onClick={onShowVotes}>Show votes</Button>
-      <Button onClick={onClearVotes}>Cear votes</Button>
+      <Button onClick={onClearVotes}>Clear votes</Button>
       {sessionData?.votingType && <VotingButtons createVote={createVote} votingType={sessionData.votingType} />}
       <div>
         Participants:
@@ -117,6 +81,6 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
         Invite others:
         <br /> {`http://localhost:3000/join/${sessionId}`}
       </p>
-    </>
+    </main>
   )
 }
