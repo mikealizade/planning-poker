@@ -10,18 +10,19 @@ export type Session = {
   session_name: string
   created_at: Date
   status: string
-  votingType: string
+  voting_type: string
+  is_votes_visible: boolean
 }
 
-type FetchSession = { sessionData: Session; participants: Participant[]; votingType: string }
+type FetchSession = { sessionData: Session; participants: Participant[]; voting_type: string }
 
 export const createSession = async ({ sessionName, votingType }: { sessionName: string; votingType?: string }): Promise<Session> => {
   const response = await axios.post(`${apiUrl}/createSession`, { sessionName, votingType })
   return response.data
 }
 
-export const updateSession = async ({ id, votingType }: { id: string; votingType?: string }): Promise<Session> => {
-  const response = await axios.patch(`${apiUrl}/updateSession`, { id, votingType })
+export const updateSession = async ({ id, isVotesVisible }: { id: string; isVotesVisible: boolean }): Promise<Session> => {
+  const response = await axios.patch(`${apiUrl}/updateSession`, { id, isVotesVisible })
   return response.data
 }
 

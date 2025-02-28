@@ -2,10 +2,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { createSession, deleteSession, updateSession } from '@/api/api'
+import { useWebSocket } from './useWebSocket'
 
 export const useSession = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { showVotes, clearVotes } = useWebSocket()
 
   const createSessionMutation = useMutation({
     mutationFn: createSession,
@@ -18,10 +20,14 @@ export const useSession = () => {
 
   const updateSessionMutation = useMutation({
     mutationFn: updateSession,
-    onSuccess: () => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['updateSession'] })
-      // const sessionId = id
-      // router.push(`/join/${sessionId}`)
+      console.log('🚀 ~ useSession ~ data:', data)
+      if (data.is_votes_visible) {
+        showVotes({ sessionId: data.id })
+      } else {
+        clearVotes({ sessionId: data.id })
+      }
     },
   })
 

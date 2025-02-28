@@ -11,6 +11,7 @@ import { fetchSession } from '@/api/api'
 import { getCurrentUserId } from '@/utils/storage'
 import { VotesSummary } from '../VotesSummary/VotesSummary'
 import { VotingButtons } from '../VotingButtons/VotingButtons'
+import { useSession } from '@/hooks/useSession'
 
 export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { data: { sessionData, participants: dbParticipants = [] } = {} } = useQuery({
@@ -21,11 +22,14 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const {
     sessionData: { participants: wsParticipants, currentUserId = getCurrentUserId(), isVotesVisible },
   } = useAppContext()
-  const { showVotes, clearVotes } = useWebSocket()
+  // const { clearVotes } = useWebSocket()
+  const { updateSessionMutation } = useSession()
+
   const { deleteParticipantMutation, voteMutation } = useParticipant({ sessionId })
   const participantsData: Participant[] =
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length ? mapParticpants(dbParticipants) : wsParticipants
   const userName = participantsData.find(({ userId }) => userId === currentUserId)?.participantName
+  const areVotesVisible = isVotesVisible || sessionData?.is_votes_visible
 
   console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
   const onLeaveSession = (id: string) => () => {
@@ -41,12 +45,13 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   }
 
   const onShowVotes = () => {
-    showVotes({ sessionId })
+    updateSessionMutation.mutate({ id: sessionId, isVotesVisible: true })
   }
 
   const onClearVotes = () => {
+    updateSessionMutation.mutate({ id: sessionId, isVotesVisible: false })
     createVote('')
-    clearVotes({ sessionId })
+    // clearVotes({ sessionId })
   }
 
   return (
@@ -59,12 +64,12 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
       </div>
       <Button onClick={onShowVotes}>Show votes</Button>
       <Button onClick={onClearVotes}>Clear votes</Button>
-      {sessionData?.votingType && <VotingButtons createVote={createVote} votingType={sessionData.votingType} />}
+      {sessionData?.voting_type && <VotingButtons createVote={createVote} votingType={sessionData.voting_type} />}
       <div>
         Participants:
         <ul>
           {participantsData?.map(({ userId, participantName, vote }: Participant) => {
-            const curentVote = vote ? (userId !== currentUserId ? (isVotesVisible ? vote : ' ? ') : vote) : ' no vote '
+            const curentVote = vote ? (userId !== currentUserId ? (areVotesVisible ? vote : ' ? ') : vote) : ' no vote '
 
             return (
               <li key={Math.random()}>
@@ -74,7 +79,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
               </li>
             )
           })}
-          {isVotesVisible && <VotesSummary data={participantsData} />}
+          {areVotesVisible && <VotesSummary data={participantsData} />}
         </ul>
       </div>
       <p>

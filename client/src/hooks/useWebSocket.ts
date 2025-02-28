@@ -2,10 +2,9 @@ import { defaultSession, useAppContext } from '@/providers/providers'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { io } from 'socket.io-client'
-
-export type User = { sessionId: string; userId: string; participantName: string }
 import { Participant } from './useParticipant'
 
+export type User = { sessionId: string; userId: string; participantName: string }
 type VotesData = {
   isVotesVisible: boolean
 }
