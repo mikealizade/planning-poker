@@ -15,9 +15,10 @@ export type ParticipantDB = {
   has_voted: boolean
   is_active: boolean
   role: string
+  // avatar: string
 }
 
-export type Participant = Pick<User, 'userId' | 'participantName'> & { vote: string }
+export type Participant = Pick<User, 'userId' | 'participantName'> & { vote: string; avatar?: string }
 
 export const useParticipant = ({ sessionId }: { sessionId: string }) => {
   const queryClient = useQueryClient()
@@ -28,7 +29,7 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
     mutationFn: api.createParticipant,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['createParticipant'] })
-      joinSession({ sessionId, userId: data.id, participantName: data.participant_name })
+      joinSession({ sessionId, userId: data.id, participantName: data.participant_name, avatar: data.avatar })
       ss.storeCurrentUserId(data.id)
       router.push(`/session/${sessionId}`)
     },
@@ -38,7 +39,7 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
     mutationFn: api.deleteParticipant,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['deleteParticipant'] })
-      leaveSession({ sessionId, userId: data.id, participantName: data.participant_name })
+      leaveSession({ sessionId, userId: data.id })
       ss.deleteCurrentUserId()
     },
   })

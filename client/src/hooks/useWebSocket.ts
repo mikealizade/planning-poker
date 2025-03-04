@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { Participant } from './useParticipant'
 
-export type User = { sessionId: string; userId: string; participantName: string }
+export type User = { sessionId: string; userId: string; participantName: string; avatar: string }
 type VotesData = {
   isVotesVisible: boolean
 }
@@ -25,9 +25,9 @@ export const useWebSocket = () => {
     }
   })
 
-  const joinSession = ({ sessionId, userId, participantName }: User) => {
+  const joinSession = ({ sessionId, userId, participantName, avatar }: User) => {
     if (userId) {
-      socket.emit('joinSession', { sessionId, userId, participantName })
+      socket.emit('joinSession', { sessionId, userId, participantName, avatar })
       setSessionData(prevData => ({
         ...prevData,
         currentUserId: userId,
@@ -35,9 +35,9 @@ export const useWebSocket = () => {
     }
   }
 
-  const leaveSession = ({ sessionId, userId, participantName }: User) => {
+  const leaveSession = ({ sessionId, userId }: Omit<User, 'participantName' | 'avatar'>) => {
     if (userId) {
-      socket.emit('leaveSession', { sessionId, userId, participantName })
+      socket.emit('leaveSession', { sessionId, userId })
     }
   }
 
@@ -63,7 +63,7 @@ export const useWebSocket = () => {
 
   useEffect(() => {
     const handleSessionUpdate = (updatedParticipants: Participant[]) => {
-      // console.log('🚀 Session updated:', updatedParticipants)
+      console.log('🚀 Session updated:', updatedParticipants)
 
       setSessionData(prevData => ({
         ...prevData,

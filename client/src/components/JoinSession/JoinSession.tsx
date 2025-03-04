@@ -2,7 +2,9 @@
 import { v4 as uuidv4 } from 'uuid'
 import { useState } from 'react'
 import { useParticipant } from '@/hooks/useParticipant'
-import { Button } from '@/styles/Button.style'
+import { Button } from '@/styles/Styles.style'
+
+import { PageTitle, CenteredContent, Input, CreateSessionContainer } from '@/styles/Styles.style'
 
 export const JoinSession = ({ sessionId }: { sessionId: string }) => {
   const [name, setName] = useState('')
@@ -30,12 +32,21 @@ export const JoinSession = ({ sessionId }: { sessionId: string }) => {
   }
 
   return (
-    <div>
-      <h1>Join session</h1>
-      <div>
-        <input type='text' name='name' value={name} onChange={onEnterName} />
-        <Button onClick={onJoinSession}>Join session</Button>
-      </div>
-    </div>
+    // <div>
+    //   <h1>Join session</h1>
+    //   <div>
+    //     <input type='text' name='name' value={name} onChange={onEnterName} />
+    //     <Button onClick={onJoinSession}>Join session</Button>
+    //   </div>
+    // </div>
+    <CenteredContent>
+      <PageTitle>Join session</PageTitle>
+      <CreateSessionContainer>
+        <Input type='text' name='name' value={name} onChange={onEnterName} placeholder='Enter your name'></Input>
+        <Button onClick={onJoinSession} disabled={!name}>
+          Join session
+        </Button>
+      </CreateSessionContainer>
+    </CenteredContent>
   )
 }

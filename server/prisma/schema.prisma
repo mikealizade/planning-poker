@@ -18,7 +18,8 @@ model Sessions {
   session_name String
   created_at   DateTime @default(now())
   status       String
-  votingType    String?
+  voting_type    String?
+  is_votes_visible Boolean
 }
 
 model Participants {
@@ -31,4 +32,5 @@ model Participants {
   is_active        Boolean
   role             String
   joined_at        DateTime @default(now())
+  avatar          String
 }

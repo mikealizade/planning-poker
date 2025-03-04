@@ -31,6 +31,12 @@ a {
   color: #ffffff;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,

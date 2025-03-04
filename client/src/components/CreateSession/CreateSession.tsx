@@ -1,5 +1,6 @@
 'use client'
-import { Button } from '@/styles/Button.style'
+import { Button } from '@/styles/Styles.style'
+import { PageTitle, CenteredContent, Input, CreateSessionContainer } from '@/styles/Styles.style'
 import { useState } from 'react'
 import { useSession } from '@/hooks/useSession'
 import { VotingOptions } from '../VotingOptions/VotingOptions'
@@ -19,15 +20,15 @@ export const CreateSession = () => {
   }
 
   return (
-    <div>
-      <h1>Start a session</h1>
-      <div>
-        <input type='text' name='name' value={sessionName} onChange={onAddSessionName} />
+    <CenteredContent>
+      <PageTitle>Start a session</PageTitle>
+      <CreateSessionContainer>
+        <Input type='text' name='name' value={sessionName} onChange={onAddSessionName} placeholder='Enter session name'></Input>
+        <VotingOptions setVotingType={setVotingType} />
         <Button onClick={onCreateSession} disabled={!votingType}>
           Start session
         </Button>
-        <VotingOptions setVotingType={setVotingType} />
-      </div>
-    </div>
+      </CreateSessionContainer>
+    </CenteredContent>
   )
 }

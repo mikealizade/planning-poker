@@ -54,8 +54,9 @@ router.post("/createSession", async (req: Request, res: Response) => {
       data: {
         id: randomNumber(),
         session_name: sessionName,
-        votingType,
+        voting_type: votingType,
         status: "active",
+        is_votes_visible: false,
       },
     });
     res.status(201).json(sessions);
@@ -69,7 +70,7 @@ router.post("/createSession", async (req: Request, res: Response) => {
 });
 
 router.patch("/updateSession", async (req: Request, res: Response) => {
-  const { id, votingType } = req.body;
+  const { id, isVotesVisible } = req.body;
 
   try {
     const sessions = await prisma.sessions.update({
@@ -77,7 +78,7 @@ router.patch("/updateSession", async (req: Request, res: Response) => {
         id,
       },
       data: {
-        votingType,
+        is_votes_visible: isVotesVisible,
       },
     });
     res.status(201).json(sessions);
@@ -89,6 +90,19 @@ router.patch("/updateSession", async (req: Request, res: Response) => {
     });
   }
 });
+
+const getAvatar = async (avatars: string[]) => {
+  const values = await prisma.participants.findMany({
+    select: { avatar: true }, // Replace 'email' with your desired column
+  });
+  console.log("🚀 ~ getAvatar ~ values:", values);
+
+  const avatarValues = values.map((row) => row.avatar); // Extract the values into an array
+  const [avatar] = avatarValues.map((value) =>
+    avatars.find((avatar) => !avatarValues.includes(avatar))
+  );
+  return avatar || avatars[0];
+};
 
 router.post("/createParticipant", async (req: Request, res: Response) => {
   const {
@@ -103,6 +117,19 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
   } = req.body;
 
   try {
+    const avatars = [
+      "frog",
+      "gorilla",
+      "cock",
+      "rhino",
+      "horse",
+      "flamingo",
+      "newt",
+      "octopus",
+    ];
+
+    const avatar = await getAvatar(avatars); // Ensure avatar is resolved before using
+
     const participant = await prisma.participants.create({
       data: {
         id: id ?? "guest",
@@ -113,6 +140,7 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
         has_voted,
         is_active,
         role,
+        avatar,
       },
     });
     res.status(201).json(participant);

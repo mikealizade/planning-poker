@@ -36,7 +36,7 @@ export const fetchSession = async ({ sessionId }: { sessionId: string }): Promis
   return response.data
 }
 
-export const createParticipant = async (participant: ParticipantDB): Promise<ParticipantDB> => {
+export const createParticipant = async (participant: ParticipantDB): Promise<ParticipantDB & { avatar: string }> => {
   const response = await axios.post(`${apiUrl}/createParticipant`, participant)
   return response.data
 }

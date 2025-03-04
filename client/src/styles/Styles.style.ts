@@ -1,15 +1,26 @@
 import styled from '@emotion/styled'
 
+// export const Button = styled.button`
+//   display: flex;
+//   justify-content: center;
+//   background-color: #0f0f17;
+//   border: 1px solid yellow;
+//   font-size: 1.2rem;
+//   border-radius: 40px;
+//   padding: 10px 20px;
+//   cursor: pointer;
+//   color: #fff;
+// `
+
 export const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  background-color: #0f0f17;
-  border: 1px solid yellow;
-  font-size: 1.2rem;
-  border-radius: 40px;
+  background-color: #5023e4;
+  color: white;
+  border: none;
   padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  color: #fff;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
 `
 
 export const PageTitle = styled.h1`
@@ -24,6 +35,8 @@ export const CenteredContent = styled.div`
   justify-content: center;
   align-items: center;
   row-gap: 30px;
+  flex: 1;
+  margin-bottom: 230px;
 `
 
 export const CreateSessionContainer = styled.div`
@@ -42,12 +55,12 @@ export const CreateSessionContainer = styled.div`
 export const Input = styled.input`
   border-radius: 5px;
   background-color: #3a354a;
-  padding: 11px 5px;
+  padding: 11px 5px 11px 12px;
   border: 0;
 
   &::placeholder {
     color: #ececec;
-    opacity: 0.7;
+    /* opacity: 0.7; */
     font-size: 1.2rem;
   }
 `

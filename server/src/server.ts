@@ -34,13 +34,16 @@ const io = new Server(server, {
   },
 });
 
-const sessions: Map<string, { userId: string; participantName: string }[]> =
-  new Map();
+const sessions: Map<
+  string,
+  { userId: string; participantName: string; avatar: string }[]
+> = new Map();
 
 const addParticipant = (
   sessionId: string,
   userId: string,
-  participantName: string
+  participantName: string,
+  avatar: string
 ) => {
   if (!sessions.has(sessionId)) {
     sessions.set(sessionId, []);
@@ -50,7 +53,7 @@ const addParticipant = (
   const userExists = participants.some((p) => p.userId === userId);
 
   if (!userExists) {
-    participants.push({ userId, participantName });
+    participants.push({ userId, participantName, avatar });
     sessions.set(sessionId, participants);
   }
 
@@ -74,14 +77,17 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("joinSession", async ({ sessionId, userId, participantName }) => {
-    // sessions.clear();
-    // io.in(sessionId).disconnectSockets(); // Disconnect all clients in the session
-    // return;
-    socket.join(sessionId);
-    addParticipant(sessionId, userId, participantName);
-    io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
-  });
+  socket.on(
+    "joinSession",
+    async ({ sessionId, userId, participantName, avatar }) => {
+      // sessions.clear();
+      // io.in(sessionId).disconnectSockets(); // Disconnect all clients in the session
+      // return;
+      socket.join(sessionId);
+      addParticipant(sessionId, userId, participantName, avatar);
+      io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
+    }
+  );
 
   socket.on("leaveSession", async ({ sessionId, userId }) => {
     console.log("🚀 ~ socket.on ~ sessionId:", sessionId);
