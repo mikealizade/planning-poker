@@ -1,94 +1,10 @@
 'use client'
 // import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+// import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { AppProvider, QueryProvider } from '@/providers/providers'
-
-//reset
-// app google font
-// :root styles and css vars
-
-import styled from '@emotion/styled'
-import Link from 'next/link'
-// import { useRouter } from 'next/router'
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-`
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: radial-gradient(circle, #26213b, #0f0f17);
-  border-radius: 28px;
-  flex: 1;
-  margin: 80px 10%;
-  width: 80%;
-  max-width: 1350px;
-`
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  padding: 30px;
-  align-items: center;
-  flex: 1;
-`
-
-const Header = styled.header`
-  padding: 15px 20px;
-  border-bottom: 1px solid #202226;
-`
-
-const Title = styled.h1`
-  color: #fcfeff;
-  font-weight: bold;
-  font-size: 1.2em;
-  line-height: normal;
-  position: relative;
-  margin-left: 35px;
-  display: flex;
-  align-items: center;
-
-  &:before {
-    content: '';
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    border: 2px solid #fcfeff;
-    position: absolute;
-    left: -25px;
-    top: 2px;
-  }
-
-  &:after {
-    content: '';
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: yellow;
-    position: absolute;
-    left: -35px;
-    top: 2px;
-  }
-`
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+import { Header } from '@/components/Header/Header'
+import { Body, Content, Main } from '@/styles/Styles.style'
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -102,16 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body>
         <QueryProvider>
           <AppProvider>
             <Body>
               <Content>
-                <Header>
-                  <Title>
-                    <Link href='/'>Point Poker</Link>
-                  </Title>
-                </Header>
+                <Header />
                 <Main>{children}</Main>
               </Content>
             </Body>

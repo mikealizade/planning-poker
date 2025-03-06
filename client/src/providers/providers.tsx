@@ -6,7 +6,6 @@ import { Participant } from '@/hooks/useParticipant'
 
 type SessionData = {
   sessionId: string
-  // userId: string
   participants: Participant[]
   currentUserId: string | undefined
   isVotesVisible: boolean
@@ -21,7 +20,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const defaultSession = {
   sessionId: '',
-  // userId: '',
   participants: [],
   currentUserId: undefined,
   isVotesVisible: false,

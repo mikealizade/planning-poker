@@ -1,16 +1,32 @@
 import styled from '@emotion/styled'
 
-// export const Button = styled.button`
-//   display: flex;
-//   justify-content: center;
-//   background-color: #0f0f17;
-//   border: 1px solid yellow;
-//   font-size: 1.2rem;
-//   border-radius: 40px;
-//   padding: 10px 20px;
-//   cursor: pointer;
-//   color: #fff;
-// `
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+`
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle, #26213b, #0f0f17);
+  border-radius: 28px;
+  flex: 1;
+  margin: 80px 10%;
+  width: 80%;
+  max-width: 1350px;
+`
+
+export const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  align-items: center;
+  flex: 1;
+  row-gap: 30px;
+`
 
 export const Button = styled.button`
   background-color: #5023e4;
@@ -27,6 +43,23 @@ export const PageTitle = styled.h1`
   display: flex;
   font-size: 1.4rem;
   justify-content: center;
+`
+
+export const SessionUrl = styled.p`
+  display: flex;
+  font-size: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 6px;
+  margin-top: auto;
+  color: #757778;
+  cursor: pointer;
+
+  &:hover {
+    svg {
+      color: #fff;
+    }
+  }
 `
 
 export const CenteredContent = styled.div`
@@ -60,7 +93,35 @@ export const Input = styled.input`
 
   &::placeholder {
     color: #ececec;
-    /* opacity: 0.7; */
     font-size: 1.2rem;
   }
+`
+
+export const ButtonText = styled.button`
+  font-size: 1.1rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding-left: 40px;
+  color: initial;
+  display: flex;
+  align-items: center;
+  column-gap: 6px;
+`
+
+export const CenteredDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 20px;
+  margin-right: auto;
+`
+
+export const TextWithIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 6px;
+  font-size: 1.1rem;
+  line-height: normal;
 `
