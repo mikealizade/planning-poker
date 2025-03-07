@@ -3,7 +3,7 @@ type VotingOptions = Record<string, string[]>
 
 const votingOptions: VotingOptions = {
   fibonacci: ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', '☕'],
-  'modified fibonacci': ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?', '☕'],
+  // 'modified fibonacci': ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?', '☕'],
   tshirt: ['XS', 'S', 'M', 'L', 'XL', '☕'],
   // 'create custom deck': [''],
 }

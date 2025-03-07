@@ -17,6 +17,7 @@ export const LeftColumn = styled(Column)`
 
 export const MiddleColumn = styled(Column)`
   flex: 3;
+  row-gap: 40px;
 `
 
 export const RightColumn = styled(Column)`
@@ -131,4 +132,17 @@ export const VotingSuit = styled.div`
   align-items: end;
   flex: 1;
   padding: 0 10px 10px 0;
+`
+
+export const Card = styled.div`
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d6d3d3;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  width: 40px;
+  height: 60px;
 `
