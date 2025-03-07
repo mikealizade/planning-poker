@@ -3,6 +3,28 @@ import styled from '@emotion/styled'
 export const Header = styled.header`
   padding: 15px 20px;
   border-bottom: 1px solid #202226;
+  display: flex;
+`
+
+export const VotingType = styled.div`
+  display: flex;
+  font-size: 1rem;
+  color: #757778;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  white-space: pre;
+`
+
+export const VotingTypeName = styled.div`
+  text-transform: capitalize;
+`
+
+export const Account = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
 `
 
 export const Title = styled.h1`
@@ -14,6 +36,7 @@ export const Title = styled.h1`
   margin-left: 35px;
   display: flex;
   align-items: center;
+  flex: 1;
 
   &:before {
     content: '';

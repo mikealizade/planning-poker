@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { VotingValue, VotingSuit } from '../CurrentSession/CurrentSession.style'
 import Image from 'next/image'
+import { Participant } from '@/hooks/useParticipant'
 
 type VotingOptions = Record<string, string[]>
 
@@ -54,6 +55,7 @@ const DealtCard = styled.div<{ x: number; y: number; rotation: number }>`
   color: #000;
   display: flex;
   flex-direction: column;
+  /* filter: ${({ hasBlur }) => (hasBlur ? 'blur(3px)' : '')}; */
 `
 
 const VotingCard = styled.div`
@@ -68,6 +70,33 @@ const VotingCard = styled.div`
   align-items: center;
   font-size: 1.2rem;
   cursor: pointer;
+`
+
+const FlippedCard = styled.div`
+  &:before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid #38334f;
+    position: absolute;
+    left: 32px;
+    top: 42px;
+  }
+
+  &:after {
+    content: '.';
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #38334f;
+    position: absolute;
+    left: 22px;
+    top: 42px;
+  }
 `
 
 const CardBackground = styled.div<{ x: number; y: number; rotation: number }>`
@@ -93,7 +122,7 @@ const CardBackground = styled.div<{ x: number; y: number; rotation: number }>`
     border: 2px solid #38334f;
     position: absolute;
     left: 30px;
-    top: 35px;
+    top: 38px;
   }
 
   &:after {
@@ -107,7 +136,7 @@ const CardBackground = styled.div<{ x: number; y: number; rotation: number }>`
     background-color: #38334f;
     position: absolute;
     left: 20px;
-    top: 35px;
+    top: 38px;
   }
 `
 const fanCoords = [
@@ -148,7 +177,20 @@ const CardBackgrounds = () => {
   )
 }
 
-export const VotingButtons = ({ createVote, votingType = '' }: { createVote: (vote: string) => void; votingType: string }) => {
+export const VotingButtons = ({
+  data,
+  areVotesVisible,
+  currentUserId,
+  createVote,
+  votingType = '',
+}: {
+  data: Participant[]
+  currentUserId: string
+  areVotesVisible: boolean
+  createVote: (vote: string) => void
+  votingType: string
+}) => {
+  console.log('🚀 ~ areVotesVisible:', areVotesVisible)
   const onVote = (vote: string) => () => {
     createVote(vote)
   }
@@ -160,19 +202,29 @@ export const VotingButtons = ({ createVote, votingType = '' }: { createVote: (vo
           <CardBackgrounds />
         </CardsContainer>
         <CardsContainer>
-          {votingOptions[votingType as keyof VotingOptions]?.map((vote, index) => {
+          {data?.map(({ userId, vote }, index) => {
+            if (!vote) return null
+            const currentVote = userId !== currentUserId ? (areVotesVisible ? vote : '?') : vote
+            console.log('🚀 ~ {data?.map ~ currentVote:', currentVote)
+
             return (
               <DealtCard
+                // hasBlur={currentVote === '?'}
                 key={index}
                 x={fanCoords[index]?.x}
                 y={fanCoords[index]?.y}
                 rotation={fanCoords[index]?.rotation}
-                onClick={onVote(vote)}
               >
-                <VotingValue>{vote}</VotingValue>
-                <VotingSuit>
-                  <Image alt='' src={`/images/icons/heart.svg`} width={30} height={30} />
-                </VotingSuit>
+                {currentVote !== '?' ? (
+                  <>
+                    <VotingValue>{vote}</VotingValue>
+                    <VotingSuit>
+                      <Image alt='' src={`/images/icons/heart.svg`} width={30} height={30} />
+                    </VotingSuit>
+                  </>
+                ) : (
+                  <FlippedCard />
+                )}
               </DealtCard>
             )
           })}

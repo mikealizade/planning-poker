@@ -66,10 +66,18 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
       <Settings userName={String(userName)} sessionName={String(sessionData?.session_name)} />
       <S.Content>
         <S.LeftColumn>
-          <Players data={participantsData} currentUserId={String(currentUserId)} areVotesVisible={!!areVotesVisible} isOdd={false} />
+          <Players data={participantsData} isOdd={false} />
         </S.LeftColumn>
         <S.MiddleColumn>
-          {sessionData?.voting_type && <VotingButtons createVote={createVote} votingType={sessionData.voting_type} />}
+          {sessionData?.voting_type && (
+            <VotingButtons
+              data={participantsData}
+              currentUserId={String(currentUserId)}
+              areVotesVisible={!!areVotesVisible}
+              createVote={createVote}
+              votingType={sessionData.voting_type}
+            />
+          )}
           {/* {areVotesVisible && <VotesSummary data={participantsData} />} */}
           <CenteredDiv>
             <S.ShowButton onClick={onShowVotes}>
@@ -83,7 +91,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
           </CenteredDiv>
         </S.MiddleColumn>
         <S.RightColumn>
-          <Players data={participantsData} currentUserId={String(currentUserId)} areVotesVisible={!!areVotesVisible} isOdd />
+          <Players data={participantsData} isOdd />
           <SessionUrl onClick={onCopySessionUrl}>
             Copy game link
             <PiCopySimple />

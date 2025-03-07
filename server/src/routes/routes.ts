@@ -92,16 +92,21 @@ router.patch("/updateSession", async (req: Request, res: Response) => {
 });
 
 const getAvatar = async (avatars: string[]) => {
-  const values = await prisma.participants.findMany({
-    select: { avatar: true }, // Replace 'email' with your desired column
+  const dbAvatars = await prisma.participants.findMany({
+    select: { avatar: true },
   });
-  console.log("🚀 ~ getAvatar ~ values:", values);
+  console.log("🚀 ~ getAvatar ~ values:", dbAvatars);
 
-  const avatarValues = values.map((row) => row.avatar); // Extract the values into an array
-  const [avatar] = avatarValues.map((value) =>
-    avatars.find((avatar) => !avatarValues.includes(avatar))
+  const dbAvatarValues = dbAvatars.map((row) => row.avatar); // Extract the values into an array
+  return (
+    avatars.find((avatar) => !dbAvatarValues.includes(avatar)) ||
+    avatars[avatars.length - 1]
   );
-  return avatar || avatars[0];
+
+  // const [avatar] = avatars.map((value) =>
+  //   avatars.find((avatar) => !dbAvatarValues.includes(avatar))
+  // );
+  // return avatar || avatars[0];
 };
 
 router.post("/createParticipant", async (req: Request, res: Response) => {
@@ -118,14 +123,42 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
 
   try {
     const avatars = [
-      "frog",
-      "gorilla",
+      "bug",
+      "bull",
+      "camel",
+      "chimp",
       "cock",
-      "rhino",
-      "horse",
+      "croc",
+      "dog",
+      "elephant",
+      "fish",
       "flamingo",
+      "frog",
+      "goat",
+      "gorilla",
+      "hamster",
+      "hippo",
+      "horse",
+      "koala",
+      "lizard",
+      "moose",
+      "mouse",
       "newt",
       "octopus",
+      "ostrich",
+      "ox",
+      "parrot",
+      "rabbit",
+      "racoon",
+      "reptile",
+      "rhino",
+      "rottweiler",
+      "seal",
+      "sloth",
+      "terrier",
+      "turtle",
+      "vole",
+      "zebra",
     ];
 
     const avatar = await getAvatar(avatars); // Ensure avatar is resolved before using

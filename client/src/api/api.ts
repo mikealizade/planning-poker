@@ -14,7 +14,7 @@ export type Session = {
   is_votes_visible: boolean
 }
 
-type FetchSession = { sessionData: Session; participants: Participant[]; voting_type: string }
+type FetchSession = { sessionData: Session; participants: Participant[] }
 
 export const createSession = async ({ sessionName, votingType }: { sessionName: string; votingType?: string }): Promise<Session> => {
   const response = await axios.post(`${apiUrl}/createSession`, { sessionName, votingType })

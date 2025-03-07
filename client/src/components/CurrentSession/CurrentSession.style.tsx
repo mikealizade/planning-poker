@@ -57,6 +57,7 @@ export const PlayerStatus = styled.div`
   font-size: 1.15rem;
   min-width: 90px;
   justify-content: center;
+  text-align: center;
 `
 
 export const PlayerName = styled.div`

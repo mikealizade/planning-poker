@@ -114,7 +114,6 @@ export const CenteredDiv = styled.div`
   justify-content: center;
   align-items: center;
   column-gap: 20px;
-  margin-right: auto;
 `
 
 export const TextWithIcon = styled.div`
