@@ -17,7 +17,7 @@ export const LeftColumn = styled(Column)`
 
 export const MiddleColumn = styled(Column)`
   flex: 3;
-  row-gap: 40px;
+  row-gap: 18px;
 `
 
 export const RightColumn = styled(Column)`

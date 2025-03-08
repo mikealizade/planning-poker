@@ -4,6 +4,11 @@ export const SettingsContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+
+  > div,
+  button {
+    flex: 1;
+  }
 `
 
 export const LeaveButton = styled.button`

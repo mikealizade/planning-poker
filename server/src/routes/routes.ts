@@ -95,18 +95,12 @@ const getAvatar = async (avatars: string[]) => {
   const dbAvatars = await prisma.participants.findMany({
     select: { avatar: true },
   });
-  console.log("🚀 ~ getAvatar ~ values:", dbAvatars);
+  const dbAvatarValues = dbAvatars.map((row) => row.avatar);
 
-  const dbAvatarValues = dbAvatars.map((row) => row.avatar); // Extract the values into an array
   return (
     avatars.find((avatar) => !dbAvatarValues.includes(avatar)) ||
     avatars[avatars.length - 1]
   );
-
-  // const [avatar] = avatars.map((value) =>
-  //   avatars.find((avatar) => !dbAvatarValues.includes(avatar))
-  // );
-  // return avatar || avatars[0];
 };
 
 router.post("/createParticipant", async (req: Request, res: Response) => {
@@ -161,7 +155,7 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
       "zebra",
     ];
 
-    const avatar = await getAvatar(avatars); // Ensure avatar is resolved before using
+    const avatar = await getAvatar(avatars);
 
     const participant = await prisma.participants.create({
       data: {

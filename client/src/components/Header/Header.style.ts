@@ -4,6 +4,10 @@ export const Header = styled.header`
   padding: 15px 20px;
   border-bottom: 1px solid #202226;
   display: flex;
+
+  > * {
+    flex: 1;
+  }
 `
 
 export const VotingType = styled.div`
@@ -11,13 +15,19 @@ export const VotingType = styled.div`
   font-size: 1rem;
   color: #757778;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1;
   white-space: pre;
 `
 
 export const VotingTypeName = styled.div`
   text-transform: capitalize;
+`
+
+export const SessionName = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
 `
 
 export const Account = styled.div`

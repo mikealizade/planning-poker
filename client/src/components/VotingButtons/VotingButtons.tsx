@@ -15,7 +15,7 @@ const votingOptions: VotingOptions = {
 const Container = styled.div`
   display: flex;
   width: 50%;
-  height: 400px;
+  height: 250px;
   position: relative;
   align-self: center;
   flex-direction: column;
@@ -44,7 +44,7 @@ const VotingCardsContainer = styled.div`
 
 const DealtCard = styled.div<{ x: number; y: number; rotation: number }>`
   position: absolute;
-  transform-origin: bottom center; /* Ensures rotation is from the base */
+  transform-origin: bottom center;
   transform: translate(0px, -10px) rotate(-20deg);
   transform: ${({ x, y, rotation }) => `translate(${x}px, ${y}px) rotate(${rotation}deg)`};
   transition: transform 0.3s ease-in-out;
@@ -55,7 +55,6 @@ const DealtCard = styled.div<{ x: number; y: number; rotation: number }>`
   color: #000;
   display: flex;
   flex-direction: column;
-  /* filter: ${({ hasBlur }) => (hasBlur ? 'blur(3px)' : '')}; */
 `
 
 const VotingCard = styled.div`

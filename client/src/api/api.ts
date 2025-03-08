@@ -1,5 +1,5 @@
 import { apiUrl } from '@/components/CreateSession/CreateSession'
-import { Participant, ParticipantDB } from '@/hooks/useParticipant'
+import { ParticipantDB } from '@/hooks/useParticipant'
 import axios from 'axios'
 
 type Vote = Pick<ParticipantDB, 'id' | 'session_id' | 'vote'>
@@ -14,7 +14,7 @@ export type Session = {
   is_votes_visible: boolean
 }
 
-type FetchSession = { sessionData: Session; participants: Participant[] }
+type FetchSession = { sessionData: Session; participants: ParticipantDB[] }
 
 export const createSession = async ({ sessionName, votingType }: { sessionName: string; votingType?: string }): Promise<Session> => {
   const response = await axios.post(`${apiUrl}/createSession`, { sessionName, votingType })

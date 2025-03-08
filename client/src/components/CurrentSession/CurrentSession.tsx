@@ -30,7 +30,7 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { voteMutation } = useParticipant({ sessionId })
   const participantsData: Participant[] =
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length ? mapParticpants(dbParticipants) : wsParticipants
-  const userName = participantsData.find(({ userId }) => userId === currentUserId)?.participantName
+  // const userName = participantsData.find(({ userId }) => userId === currentUserId)?.participantName
   const areVotesVisible = isVotesVisible || sessionData?.is_votes_visible
 
   console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
@@ -63,12 +63,13 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
 
   return (
     <>
-      <Settings userName={String(userName)} sessionName={String(sessionData?.session_name)} />
+      <Settings />
       <S.Content>
         <S.LeftColumn>
           <Players data={participantsData} isOdd={false} />
         </S.LeftColumn>
         <S.MiddleColumn>
+          <VotesSummary data={participantsData} />
           {sessionData?.voting_type && (
             <VotingButtons
               data={participantsData}
@@ -78,7 +79,6 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
               votingType={sessionData.voting_type}
             />
           )}
-          {/* {areVotesVisible && <VotesSummary data={participantsData} />} */}
           <CenteredDiv>
             <S.ShowButton onClick={onShowVotes}>
               <PiEye />
