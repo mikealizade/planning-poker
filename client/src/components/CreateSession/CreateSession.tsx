@@ -7,7 +7,7 @@ import { VotingOptions } from '../VotingOptions/VotingOptions'
 export const apiUrl = process.env.NEXT_PUBLIC_API_URI
 
 export const CreateSession = () => {
-  const [sessionName, setSessionName] = useState('')
+  const [sessionName, setSessionName] = useState('New session')
   const { createSessionMutation } = useSession()
   const [votingType, setVotingType] = useState('')
 

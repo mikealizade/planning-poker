@@ -19,7 +19,7 @@ export const VotingOptions = ({ setVotingType }: { setVotingType: (vote: string)
     <>
       <Label htmlFor='voting-type'>Select voting system</Label>
       <Select id='voting-type' onChange={onSelectVotingType}>
-        <option value=''>Select voting system</option>
+        <option value='fibonacci'>Select voting system</option>
         {Object.keys(votingOptions).map(option => (
           <option key={option} value={option}>
             {option}

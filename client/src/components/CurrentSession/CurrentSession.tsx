@@ -8,7 +8,6 @@ import { mapParticpants } from '@/utils/functions'
 import { fetchSession } from '@/api/api'
 import { getCurrentUserId } from '@/utils/storage'
 import { VotesSummary } from '../VotesSummary/VotesSummary'
-import { VotingButtons } from '../VotingButtons/VotingButtons'
 import { useSession } from '@/hooks/useSession'
 import * as S from './CurrentSession.style'
 import { Players } from '../Players/Players'
@@ -16,6 +15,7 @@ import { PiEye, PiBroom, PiCopySimple } from 'react-icons/pi'
 import React from 'react'
 import { Settings } from '@/components/Settings/Settings'
 import { CenteredDiv } from '@/styles/Styles.style'
+import { Poker } from '@/components/Poker/Poker'
 
 export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { data: { sessionData, participants: dbParticipants = [] } = {} } = useQuery({
@@ -30,10 +30,9 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { voteMutation } = useParticipant({ sessionId })
   const participantsData: Participant[] =
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length ? mapParticpants(dbParticipants) : wsParticipants
-  // const userName = participantsData.find(({ userId }) => userId === currentUserId)?.participantName
   const areVotesVisible = isVotesVisible || sessionData?.is_votes_visible
 
-  console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
+  // console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
 
   const createVote = (vote: string) => {
     voteMutation.mutate({
@@ -69,9 +68,9 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
           <Players data={participantsData} isOdd={false} />
         </S.LeftColumn>
         <S.MiddleColumn>
-          <VotesSummary data={participantsData} />
+          <VotesSummary data={participantsData} areVotesVisible={!!areVotesVisible} />
           {sessionData?.voting_type && (
-            <VotingButtons
+            <Poker
               data={participantsData}
               currentUserId={String(currentUserId)}
               areVotesVisible={!!areVotesVisible}

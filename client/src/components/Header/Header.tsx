@@ -7,17 +7,25 @@ import { getCurrentUserId } from '@/utils/storage'
 import { CenteredDiv, TextWithIcon } from '@/styles/Styles.style'
 import { TbUser } from 'react-icons/tb'
 import { MdOutlinePages } from 'react-icons/md'
+import { useAppContext } from '@/providers/providers'
 
 export const Header = () => {
   const { id: sessionId } = useParams<{ id: string }>()
-  const { data, data: { participants = [], sessionData: { session_name, voting_type } = {} } = {} } = useQuery({
+  const { data: { sessionData: { session_name, voting_type } = {} } = {} } = useQuery({
     queryKey: ['fetchVotingType', sessionId],
     queryFn: () => fetchSession({ sessionId }),
     enabled: !!sessionId,
   })
+  // console.log('🚀 ~ Header ~ participants:', participants)
+  // console.log('🚀 ~ Header ~ data:', data)
   const storedUserId = getCurrentUserId()
-  const userName = participants?.find(({ id }: { id?: string }) => id === storedUserId)?.participant_name
-  console.log('🚀 ~ Header ~ data:', data)
+  console.log('🚀 ~ Header ~ storedUserId:', storedUserId)
+  // console.log('🚀 ~ Header ~ userName:', userName)
+  const {
+    sessionData: { participants = [] },
+  } = useAppContext()
+  const userName = participants?.find(({ userId }: { userId?: string }) => userId === storedUserId)?.participantName
+  // console.log('🚀 ~ Header ~ data1:', data1)
 
   return (
     <S.Header>
@@ -26,19 +34,25 @@ export const Header = () => {
       </S.Title>
       <S.SessionName>
         <CenteredDiv>
-          <TextWithIcon>
-            <TbUser />
-            {userName}
-          </TextWithIcon>
-          <TextWithIcon>
-            <MdOutlinePages />
-            {session_name}
-          </TextWithIcon>
+          {userName && (
+            <TextWithIcon>
+              <TbUser />
+              {userName}
+            </TextWithIcon>
+          )}
+          {session_name && (
+            <TextWithIcon>
+              <MdOutlinePages />
+              {session_name}
+            </TextWithIcon>
+          )}
         </CenteredDiv>
       </S.SessionName>
-      <S.VotingType>
-        Voting system is <S.VotingTypeName>{voting_type}</S.VotingTypeName>
-      </S.VotingType>
+      {voting_type && (
+        <S.VotingType>
+          Voting system is <S.VotingTypeName>{voting_type}</S.VotingTypeName>
+        </S.VotingType>
+      )}
       {/* <S.Account></S.Account> */}
     </S.Header>
   )

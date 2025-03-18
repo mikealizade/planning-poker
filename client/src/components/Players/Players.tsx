@@ -4,8 +4,6 @@ import { Player } from '../Player/Player'
 
 type PlayersProps = {
   data: Participant[]
-  // currentUserId: string
-  // areVotesVisible: boolean
   isOdd: boolean
 }
 
@@ -15,8 +13,6 @@ export const Players = ({ data, isOdd }: PlayersProps) => {
   return (
     <S.Players>
       {filteredData?.map(({ participantName, vote, avatar = '' }: Participant) => {
-        // const currentVote = vote ? (userId !== currentUserId ? (areVotesVisible ? vote : null) : vote) : null
-
         return (
           <li key={Math.random()}>
             <Player name={participantName} hasVoted={!!vote} avatar={avatar} isOdd={isOdd} />

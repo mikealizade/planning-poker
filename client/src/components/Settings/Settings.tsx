@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation'
 import { useAppContext } from '@/providers/providers'
 import { LeaveButton, SettingsContainer } from './Settings.style'
 import { TbUserX } from 'react-icons/tb'
+import { IoSettingsOutline } from 'react-icons/io5'
 
 export const Settings = () => {
   const { id } = useParams<{ id: string }>()
@@ -18,6 +19,7 @@ export const Settings = () => {
 
   return (
     <SettingsContainer>
+      <IoSettingsOutline />
       <LeaveButton onClick={onLeaveSession}>
         <TbUserX />
       </LeaveButton>

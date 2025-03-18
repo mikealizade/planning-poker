@@ -1,10 +1,16 @@
 'use client'
 // import type { Metadata } from 'next'
-// import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { AppProvider, QueryProvider } from '@/providers/providers'
 import { Header } from '@/components/Header/Header'
 import { Body, Content, Main } from '@/styles/Styles.style'
+import { Poppins } from 'next/font/google'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '400',
+})
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -17,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' className={poppins.className}>
       <body>
         <QueryProvider>
           <AppProvider>

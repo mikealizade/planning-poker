@@ -7,7 +7,7 @@ import { Button } from '@/styles/Styles.style'
 import { PageTitle, CenteredContent, Input, CreateSessionContainer } from '@/styles/Styles.style'
 
 export const JoinSession = ({ sessionId }: { sessionId: string }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState('Mike')
   const { createParticipantMutation } = useParticipant({ sessionId })
 
   const createParticipant = () => {

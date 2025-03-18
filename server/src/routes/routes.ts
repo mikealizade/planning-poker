@@ -97,6 +97,14 @@ const getAvatar = async (avatars: string[]) => {
   });
   const dbAvatarValues = dbAvatars.map((row) => row.avatar);
 
+  if (dbAvatarValues.length === avatars.length) {
+    await prisma.participants.updateMany({
+      data: {
+        avatar: "",
+      },
+    });
+  }
+
   return (
     avatars.find((avatar) => !dbAvatarValues.includes(avatar)) ||
     avatars[avatars.length - 1]
@@ -167,7 +175,7 @@ router.post("/createParticipant", async (req: Request, res: Response) => {
         has_voted,
         is_active,
         role,
-        avatar,
+        avatar, // needs to be on a per session basis
       },
     });
     res.status(201).json(participant);

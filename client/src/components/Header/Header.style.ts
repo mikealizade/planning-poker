@@ -4,10 +4,6 @@ export const Header = styled.header`
   padding: 15px 20px;
   border-bottom: 1px solid #202226;
   display: flex;
-
-  > * {
-    flex: 1;
-  }
 `
 
 export const VotingType = styled.div`
@@ -22,6 +18,7 @@ export const VotingType = styled.div`
 
 export const VotingTypeName = styled.div`
   text-transform: capitalize;
+  color: #fff;
 `
 
 export const SessionName = styled.div`
@@ -56,7 +53,7 @@ export const Title = styled.h1`
     border: 2px solid #fcfeff;
     position: absolute;
     left: -25px;
-    top: 2px;
+    top: 5px;
   }
 
   &:after {
@@ -70,6 +67,6 @@ export const Title = styled.h1`
     background-color: yellow;
     position: absolute;
     left: -35px;
-    top: 2px;
+    top: 5px;
   }
 `

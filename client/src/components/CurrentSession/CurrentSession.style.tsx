@@ -87,7 +87,6 @@ export const LeaveButton = styled.button`
   background-color: transparent;
   color: #fff;
   border: 0;
-  /* border-radius: 20px; */
   cursor: pointer;
   font-size: 0.9rem;
   padding: 2px 8px;
@@ -95,8 +94,8 @@ export const LeaveButton = styled.button`
 export const VotingCards = styled.div`
   display: flex;
   position: relative;
-  width: 100%; /* Adjust width to control arc size */
-  height: 150px; /* Half of width to form a semi-circle */
+  width: 100%;
+  height: 150px;
   justify-content: center;
 `
 export const VotingCard = styled.div<{ x: number; y: number }>`
@@ -108,31 +107,6 @@ export const VotingCard = styled.div<{ x: number; y: number }>`
   display: flex;
   flex-direction: column;
   transform: ${({ x, y }) => `translate(${x}px, ${y}px)`};
-
-  /* &:nth-of-type(1) {
-    transform: translate(0px, 10px);
-    rotate: -12deg;
-  }
-  &:nth-of-type(2) {
-    transform: translate(0px, -10px);
-    rotate: -10deg;
-  } */
-`
-export const VotingValue = styled.div`
-  color: #000;
-  display: flex;
-  justify-content: flex-start;
-  font-size: 1.4rem;
-  flex: 1;
-  padding: 5px 0 0 5px;
-`
-export const VotingSuit = styled.div`
-  color: #000;
-  display: flex;
-  justify-content: flex-end;
-  align-items: end;
-  flex: 1;
-  padding: 0 10px 10px 0;
 `
 
 export const Card = styled.div`
