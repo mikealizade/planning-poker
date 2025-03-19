@@ -11,12 +11,14 @@ export const Body = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  background: radial-gradient(circle, #26213b, #0f0f17);
+  background: radial-gradient(at 50% 50%, #5733ae, #0f0f17 70%);
   border-radius: 28px;
   flex: 1;
   margin: 80px 10%;
   width: 80%;
   max-width: 1350px;
+  overflow: hidden;
+  min-height: 816px;
 `
 
 export const Main = styled.main`
@@ -26,6 +28,21 @@ export const Main = styled.main`
   align-items: center;
   flex: 1;
   row-gap: 30px;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    width: 1500px;
+    height: 1000px;
+    border-radius: 50%;
+    background: radial-gradient(at 50% 20%, #25213a, #080a0d);
+    border: 20px solid #16151c;
+    position: absolute;
+    bottom: -450px;
+    box-shadow: inset 5px 5px 80px #242738;
+    z-index: 0;
+  }
 `
 
 export const Button = styled.button`

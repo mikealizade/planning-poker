@@ -16,6 +16,6 @@ export const CardsContainer = styled.div`
   align-items: center;
   transform-origin: bottom left;
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
 `

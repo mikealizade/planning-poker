@@ -12,27 +12,27 @@ type DealtCardsProps = {
 
 export const fanCoords = [
   {
-    x: 0,
+    x: -35,
     y: -10,
     rotation: -20,
   },
   {
-    x: 80,
+    x: 45,
     y: -30,
     rotation: -8,
   },
   {
-    x: 164,
+    x: 129,
     y: -38,
     rotation: 0,
   },
   {
-    x: 248,
+    x: 213,
     y: -30,
     rotation: 8,
   },
   {
-    x: 328,
+    x: 293,
     y: -10,
     rotation: 20,
   },

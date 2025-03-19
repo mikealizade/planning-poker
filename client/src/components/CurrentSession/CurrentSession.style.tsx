@@ -5,6 +5,8 @@ export const Content = styled.div`
   display: flex;
   width: 100%;
   flex: 1;
+  position: relative;
+  z-index: 2;
 `
 export const Column = styled.div`
   display: flex;
@@ -47,10 +49,10 @@ export const Player = styled.div`
   justify-content: flex-start;
 `
 
-export const PlayerStatus = styled.div`
+export const PlayerStatus = styled.div<{ status: string }>`
   background-color: #000;
   border-radius: 30px;
-  color: #716ded;
+  color: ${({ status }) => (status === 'Voted' ? '#716ded' : '#e83c56')};
   padding: 5px 12px;
   display: inline-flex;
   align-self: center;
