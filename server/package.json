@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon --exec ts-node-esm src/server.ts",
     "build": "tsc",
-    "start": "node --loader ts-node/esm dist/server.js"
+    "start": "node --loader ts-node/esm dist/server.js",
+    "_info": "You must use node v19 - nvm use 19"
   },
   "keywords": [],
   "author": "",

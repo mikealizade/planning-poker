@@ -5,6 +5,7 @@ import { AppProvider, QueryProvider } from '@/providers/providers'
 import { Header } from '@/components/Header/Header'
 import { Body, Content, Main } from '@/styles/Styles.style'
 import { Poppins } from 'next/font/google'
+import { usePathname } from 'next/navigation'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -22,6 +23,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const pathname = usePathname()
+  const isSession = pathname.startsWith('/session') ? 'isSession' : ''
+
   return (
     <html lang='en' className={poppins.className}>
       <body>
@@ -30,7 +34,7 @@ export default function RootLayout({
             <Body>
               <Content>
                 <Header />
-                <Main>{children}</Main>
+                <Main className={isSession}>{children}</Main>
               </Content>
             </Body>
           </AppProvider>

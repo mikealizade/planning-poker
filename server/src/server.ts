@@ -36,7 +36,7 @@ const io = new Server(server, {
 
 const sessions: Map<
   string,
-  { userId: string; participantName: string; avatar: string }[]
+  { userId: string; participantName: string; avatar: string; vote: string }[]
 > = new Map();
 
 const addParticipant = (
@@ -53,7 +53,7 @@ const addParticipant = (
   const userExists = participants.some((p) => p.userId === userId);
 
   if (!userExists) {
-    participants.push({ userId, participantName, avatar });
+    participants.push({ userId, participantName, avatar, vote: "" });
     sessions.set(sessionId, participants);
   }
 

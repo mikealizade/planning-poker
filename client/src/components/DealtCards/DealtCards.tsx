@@ -39,7 +39,7 @@ export const fanCoords = [
 ]
 
 export const DealtCards = ({ data, areVotesVisible, currentUserId, suits }: DealtCardsProps) => {
-  // console.log('🚀 ~ suits:', suits)
+  console.log('🚀 ~ DealtCards ~ suits:', suits)
   return (
     <S.CardsContainer>
       {data?.map(({ userId, vote }, index) => {
@@ -48,7 +48,6 @@ export const DealtCards = ({ data, areVotesVisible, currentUserId, suits }: Deal
         const colour = suits[index] == 'heart' || suits[index] === 'diamond' ? 'red' : 'black'
         const suit = `/images/icons/${suits[index]}.svg`
 
-        // console.log('🚀 ~ {data?.map ~ suit:', suit, index)
         return (
           <S.DealtCard key={index} x={fanCoords[index]?.x} y={fanCoords[index]?.y} rotation={fanCoords[index]?.rotation}>
             {currentVote !== null ? (

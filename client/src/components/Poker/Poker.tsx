@@ -5,20 +5,15 @@ import { VotingButtons } from '../VotingButtons/VotingButtons'
 import { Container, CardsContainer } from './Poker.style'
 import { useEffect, useRef } from 'react'
 
-export const Poker = ({
-  data,
-  areVotesVisible,
-  currentUserId,
-  createVote,
-  votingType = '',
-}: {
+type PokerProps = {
   data: Participant[]
   currentUserId: string
   areVotesVisible: boolean
   createVote: (vote: string) => void
   votingType: string
-}) => {
-  console.log('🚀 ~ areVotesVisible:', areVotesVisible)
+}
+
+export const Poker = ({ data, areVotesVisible, currentUserId, createVote, votingType = '' }: PokerProps) => {
   const suitsRef = useRef<string[]>([])
 
   const getSuitOrder = () => {

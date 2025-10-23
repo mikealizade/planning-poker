@@ -16,16 +16,11 @@ export const Header = () => {
     queryFn: () => fetchSession({ sessionId }),
     enabled: !!sessionId,
   })
-  // console.log('🚀 ~ Header ~ participants:', participants)
-  // console.log('🚀 ~ Header ~ data:', data)
   const storedUserId = getCurrentUserId()
-  console.log('🚀 ~ Header ~ storedUserId:', storedUserId)
-  // console.log('🚀 ~ Header ~ userName:', userName)
   const {
     sessionData: { participants = [] },
   } = useAppContext()
   const userName = participants?.find(({ userId }: { userId?: string }) => userId === storedUserId)?.participantName
-  // console.log('🚀 ~ Header ~ data1:', data1)
 
   return (
     <S.Header>

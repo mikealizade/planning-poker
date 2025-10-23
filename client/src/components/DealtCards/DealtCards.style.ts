@@ -24,9 +24,40 @@ export const DealtCard = styled.div<{ x: number; y: number; rotation: number }>`
   color: #000;
   display: flex;
   flex-direction: column;
+  perspective: 1000px;
+
+  /* &:hover {
+    > div {
+      transform: rotateY(180deg);
+    }
+  } */
+`
+
+export const DealtCardInner = styled.div`
+  position: relative;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+`
+
+export const DealtCardFront = styled.div`
+  position: absolute;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  background-color: red;
+`
+
+export const DealtCardBack = styled.div`
+  position: absolute;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  background-color: green;
 `
 
 export const FlippedCard = styled.div`
+  position: absolute;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+
   &:before {
     content: '';
     width: 15px;

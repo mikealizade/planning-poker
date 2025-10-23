@@ -19,6 +19,7 @@ export const Content = styled.div`
   max-width: 1350px;
   overflow: hidden;
   min-height: 816px;
+  box-shadow: 5px 5px 80px #242738;
 `
 
 export const Main = styled.main`
@@ -31,7 +32,7 @@ export const Main = styled.main`
   position: relative;
   overflow: hidden;
 
-  &:before {
+  &.isSession:before {
     content: '';
     width: 1500px;
     height: 1000px;

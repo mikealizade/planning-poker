@@ -5,10 +5,8 @@ import { VscCoffee } from 'react-icons/vsc'
 type VoteSummaryProps = { data: Participant[]; areVotesVisible: boolean }
 
 export const VotesSummary = ({ data, areVotesVisible }: VoteSummaryProps) => {
-  // console.log('🚀 ~ VotesSummary ~ data:', data)
   const votes = Object.groupBy(data, ({ vote }) => vote)
   const hasVotes = data.some(({ vote }) => vote)
-  // console.log('🚀 ~ VotesSummary ~ votes:', votes)
   const [first] = data
   const isConsensus = data.every(item => item.vote === first.vote)
 
@@ -17,7 +15,6 @@ export const VotesSummary = ({ data, areVotesVisible }: VoteSummaryProps) => {
       <VotesSummaryList>
         {hasVotes &&
           Object.entries(votes).map(([key, value]) => {
-            console.log('🚀 ~ VotesSummary ~ key:', key)
             const totalVotes = value?.length
             return !!key ? (
               <SummaryItem key={key}>

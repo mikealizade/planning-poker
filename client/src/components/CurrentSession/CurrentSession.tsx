@@ -32,8 +32,6 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length ? mapParticpants(dbParticipants) : wsParticipants
   const areVotesVisible = isVotesVisible || sessionData?.is_votes_visible
 
-  // console.log('🚀 ~ CurrentSession ~ participantsData:', participantsData)
-
   const createVote = (vote: string) => {
     voteMutation.mutate({
       id: String(currentUserId),
@@ -54,7 +52,6 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const onCopySessionUrl = async () => {
     try {
       await navigator.clipboard.writeText(`http://localhost:3000/join/${sessionId}`)
-      console.log('Copied to clipboard:')
     } catch (err) {
       console.error('Failed to copy:', err)
     }

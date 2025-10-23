@@ -5,6 +5,7 @@ import { io } from 'socket.io-client'
 import { Participant } from './useParticipant'
 
 export type User = { sessionId: string; userId: string; participantName: string; avatar: string }
+
 type VotesData = {
   isVotesVisible: boolean
 }
@@ -67,7 +68,11 @@ export const useWebSocket = () => {
 
       setSessionData(prevData => ({
         ...prevData,
-        participants: updatedParticipants,
+        participants: updatedParticipants.sort((a, b) => {
+          const aHasVote = a.vote !== ''
+          const bHasVote = b.vote !== ''
+          return +bHasVote - +aHasVote
+        }),
       }))
 
       if (!updatedParticipants.length) {

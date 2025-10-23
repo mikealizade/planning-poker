@@ -4,6 +4,7 @@ import { PageTitle, CenteredContent, Input, CreateSessionContainer } from '@/sty
 import { useState } from 'react'
 import { useSession } from '@/hooks/useSession'
 import { VotingOptions } from '../VotingOptions/VotingOptions'
+
 export const apiUrl = process.env.NEXT_PUBLIC_API_URI
 
 export const CreateSession = () => {
