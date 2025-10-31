@@ -12,10 +12,12 @@ import { useSession } from '@/hooks/useSession'
 import * as S from './CurrentSession.style'
 import { Players } from '../Players/Players'
 import { PiEye, PiBroom, PiCopySimple } from 'react-icons/pi'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Settings } from '@/components/Settings/Settings'
 import { CenteredDiv } from '@/styles/Styles.style'
-import { Poker } from '@/components/Poker/Poker'
+import { useSocket } from '@/providers/SocketProvider'
+import { VotingButtons } from '../VotingButtons/VotingButtons'
+import { DealtCards } from '../DealtCards/DealtCards'
 
 export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const { data: { sessionData, participants: dbParticipants = [] } = {} } = useQuery({
@@ -31,6 +33,9 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
   const participantsData: Participant[] =
     dbParticipants?.length && sessionData?.id && !wsParticipants?.length ? mapParticpants(dbParticipants) : wsParticipants
   const areVotesVisible = isVotesVisible || sessionData?.is_votes_visible
+  const { socket, isConnected } = useSocket()
+
+  const hasRejoinedSession = useRef(false)
 
   const createVote = (vote: string) => {
     voteMutation.mutate({
@@ -57,42 +62,44 @@ export const CurrentSession = ({ sessionId }: { sessionId: string }) => {
     }
   }
 
+  useEffect(() => {
+    if (sessionId && isConnected && dbParticipants.length && !hasRejoinedSession.current) {
+      if (dbParticipants.some(({ id }) => id === currentUserId)) {
+        hasRejoinedSession.current = true
+        socket!.emit('reconnectSession', { userId: currentUserId })
+      }
+    }
+  }, [dbParticipants, socket, sessionId, currentUserId, isConnected])
+
   return (
     <>
       <Settings />
       <S.Content>
-        <S.LeftColumn>
-          <Players data={participantsData} isOdd={false} />
-        </S.LeftColumn>
-        <S.MiddleColumn>
-          <VotesSummary data={participantsData} areVotesVisible={!!areVotesVisible} />
-          {sessionData?.voting_type && (
-            <Poker
-              data={participantsData}
-              currentUserId={String(currentUserId)}
-              areVotesVisible={!!areVotesVisible}
-              createVote={createVote}
-              votingType={sessionData.voting_type}
-            />
-          )}
-          <CenteredDiv>
-            <S.ShowButton onClick={onShowVotes}>
-              <PiEye />
-              Show votes
-            </S.ShowButton>
-            <S.ClearButton onClick={onClearVotes}>
-              <PiBroom />
-              Clear votes
-            </S.ClearButton>
-          </CenteredDiv>
-        </S.MiddleColumn>
-        <S.RightColumn>
-          <Players data={participantsData} isOdd />
-          <SessionUrl onClick={onCopySessionUrl}>
-            Copy game link
-            <PiCopySimple />
-          </SessionUrl>
-        </S.RightColumn>
+        <VotesSummary data={participantsData} areVotesVisible={!!areVotesVisible} />
+        <Players data={participantsData} isOdd={false} />
+
+        {sessionData?.voting_type && (
+          <>
+            <DealtCards data={participantsData} currentUserId={String(currentUserId)} areVotesVisible={!!areVotesVisible} />
+            <VotingButtons createVote={createVote} votingType={sessionData.voting_type} />
+          </>
+        )}
+
+        <CenteredDiv>
+          <S.ShowButton onClick={onShowVotes}>
+            <PiEye />
+            Show votes
+          </S.ShowButton>
+          <S.ClearButton onClick={onClearVotes}>
+            <PiBroom />
+            Clear votes
+          </S.ClearButton>
+        </CenteredDiv>
+
+        <SessionUrl onClick={onCopySessionUrl}>
+          Copy game link
+          <PiCopySimple />
+        </SessionUrl>
       </S.Content>
     </>
   )

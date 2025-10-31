@@ -38,16 +38,3 @@ export const CreateSessionContainer = styled.div`
     width: 100%;
   }
 `
-
-export const Input = styled.input`
-  border-radius: 5px;
-  background-color: #3a354a;
-  padding: 11px 5px;
-  border: 0;
-
-  &::placeholder {
-    color: #ececec;
-    opacity: 0.7;
-    font-size: 1.2rem;
-  }
-`

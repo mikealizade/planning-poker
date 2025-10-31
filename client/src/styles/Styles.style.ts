@@ -4,22 +4,12 @@ export const Body = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  align-items: center;
-  justify-content: center;
 `
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  background: radial-gradient(at 50% 50%, #5733ae, #0f0f17 70%);
-  border-radius: 28px;
   flex: 1;
-  margin: 80px 10%;
-  width: 80%;
-  max-width: 1350px;
-  overflow: hidden;
-  min-height: 816px;
-  box-shadow: 5px 5px 80px #242738;
 `
 
 export const Main = styled.main`
@@ -31,19 +21,6 @@ export const Main = styled.main`
   row-gap: 30px;
   position: relative;
   overflow: hidden;
-
-  &.isSession:before {
-    content: '';
-    width: 1500px;
-    height: 1000px;
-    border-radius: 50%;
-    background: radial-gradient(at 50% 20%, #25213a, #080a0d);
-    border: 20px solid #16151c;
-    position: absolute;
-    bottom: -450px;
-    box-shadow: inset 5px 5px 80px #242738;
-    z-index: 0;
-  }
 `
 
 export const Button = styled.button`
@@ -69,7 +46,6 @@ export const SessionUrl = styled.p`
   justify-content: flex-end;
   align-items: center;
   column-gap: 6px;
-  margin-top: auto;
   color: #757778;
   cursor: pointer;
 
@@ -108,6 +84,8 @@ export const Input = styled.input`
   background-color: #3a354a;
   padding: 11px 5px 11px 12px;
   border: 0;
+  color: inherit;
+  font-size: 1.2rem;
 
   &::placeholder {
     color: #ececec;
@@ -139,6 +117,6 @@ export const TextWithIcon = styled.div`
   justify-content: center;
   align-items: center;
   column-gap: 6px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: normal;
 `

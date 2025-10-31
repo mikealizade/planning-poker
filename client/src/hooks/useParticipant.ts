@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { User, useWebSocket } from './useWebSocket'
 import { mapParticpants } from '@/utils/functions'
 import * as api from '@/api/api'
-import * as ss from '@/utils/storage'
+import * as s from '@/utils/storage'
 
 export type ParticipantDB = {
   id: string
@@ -30,7 +30,7 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['createParticipant'] })
       joinSession({ sessionId, userId: data.id, participantName: data.participant_name, avatar: data.avatar })
-      ss.storeCurrentUserId(data.id)
+      s.storeCurrentUserId(data.id)
       router.push(`/session/${sessionId}`)
     },
   })
@@ -40,7 +40,7 @@ export const useParticipant = ({ sessionId }: { sessionId: string }) => {
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['deleteParticipant'] })
       leaveSession({ sessionId, userId: data.id })
-      ss.deleteCurrentUserId()
+      s.deleteCurrentUserId()
     },
   })
 

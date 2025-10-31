@@ -2,13 +2,12 @@ import styled from '@emotion/styled'
 
 export const Header = styled.header`
   padding: 15px 20px;
-  border-bottom: 1px solid #202226;
   display: flex;
 `
 
 export const VotingType = styled.div`
   display: flex;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #757778;
   align-items: center;
   justify-content: flex-end;

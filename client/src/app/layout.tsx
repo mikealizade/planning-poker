@@ -6,6 +6,7 @@ import { Header } from '@/components/Header/Header'
 import { Body, Content, Main } from '@/styles/Styles.style'
 import { Poppins } from 'next/font/google'
 import { usePathname } from 'next/navigation'
+import { SocketProvider } from '@/providers/SocketProvider'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -29,16 +30,18 @@ export default function RootLayout({
   return (
     <html lang='en' className={poppins.className}>
       <body>
-        <QueryProvider>
-          <AppProvider>
-            <Body>
-              <Content>
-                <Header />
-                <Main className={isSession}>{children}</Main>
-              </Content>
-            </Body>
-          </AppProvider>
-        </QueryProvider>
+        <SocketProvider>
+          <QueryProvider>
+            <AppProvider>
+              <Body>
+                <Content>
+                  <Header />
+                  <Main className={isSession}>{children}</Main>
+                </Content>
+              </Body>
+            </AppProvider>
+          </QueryProvider>
+        </SocketProvider>
       </body>
     </html>
   )

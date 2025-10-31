@@ -1,5 +1,5 @@
 import { Participant } from '@/hooks/useParticipant'
-import { VotesSummaryList, SummaryItem, TotalVotes, VoteValue, Consensus, VotesSummaryContainer } from './VotesSummary.style'
+import { VotesSummaryList, SummaryItem, VoteValue, Consensus, VotesSummaryContainer } from './VotesSummary.style'
 import { VscCoffee } from 'react-icons/vsc'
 
 type VoteSummaryProps = { data: Participant[]; areVotesVisible: boolean }
@@ -12,20 +12,22 @@ export const VotesSummary = ({ data, areVotesVisible }: VoteSummaryProps) => {
 
   return (
     <VotesSummaryContainer>
-      <VotesSummaryList>
-        {hasVotes &&
-          Object.entries(votes).map(([key, value]) => {
-            const totalVotes = value?.length
-            return !!key ? (
-              <SummaryItem key={key}>
-                <TotalVotes>
-                  {totalVotes} vote{totalVotes! > 1 ? 's' : ''}
-                </TotalVotes>
-                <VoteValue>{key === 'T' ? <VscCoffee /> : key}</VoteValue>
-              </SummaryItem>
-            ) : null
-          })}
-      </VotesSummaryList>
+      {areVotesVisible && (
+        <VotesSummaryList>
+          {hasVotes &&
+            Object.entries(votes).map(([key, value]) => {
+              const totalVotes = value?.length
+              return !!key ? (
+                <SummaryItem key={key}>
+                  <div>
+                    {totalVotes} vote{totalVotes! > 1 ? 's' : ''}
+                  </div>
+                  <VoteValue>: {key === 'T' ? <VscCoffee /> : key}</VoteValue>
+                </SummaryItem>
+              ) : null
+            })}
+        </VotesSummaryList>
+      )}
       {isConsensus && hasVotes && areVotesVisible && <Consensus>Consensus!</Consensus>}
     </VotesSummaryContainer>
   )

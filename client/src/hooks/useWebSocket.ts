@@ -1,73 +1,40 @@
-import { defaultSession, useAppContext } from '@/providers/providers'
+import { useSocket } from '@/providers/SocketProvider'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
-import { io } from 'socket.io-client'
+import { useEffect, useCallback } from 'react'
 import { Participant } from './useParticipant'
+import { useAppContext, defaultSession } from '@/providers/providers'
 
-export type User = { sessionId: string; userId: string; participantName: string; avatar: string }
-
-type VotesData = {
-  isVotesVisible: boolean
+export type User = {
+  sessionId: string
+  userId: string
+  participantName: string
+  avatar: string
 }
 
-const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI ?? process.env.NEXT_PUBLIC_LOCALHOST
-const socket = io(socketUrl)
+type VotesData = { isVotesVisible: boolean }
+type MakeVote = { sessionId: string; participants: Participant[] }
+type SessionId = { sessionId: string }
+type LeaveSession = Omit<User, 'participantName' | 'avatar'>
 
 export const useWebSocket = () => {
-  const router = useRouter()
+  const { socket, isConnected } = useSocket()
   const { setSessionData } = useAppContext()
-
-  socket.on('connect', () => {
-    console.log('Connected to WebSocket:', socket.id)
-
-    const userId = window.sessionStorage.getItem('currentUserId')
-    if (userId) {
-      socket.emit('reconnectSession', { userId })
-    }
-  })
-
-  const joinSession = ({ sessionId, userId, participantName, avatar }: User) => {
-    if (userId) {
-      socket.emit('joinSession', { sessionId, userId, participantName, avatar })
-      setSessionData(prevData => ({
-        ...prevData,
-        currentUserId: userId,
-      }))
-    }
-  }
-
-  const leaveSession = ({ sessionId, userId }: Omit<User, 'participantName' | 'avatar'>) => {
-    if (userId) {
-      socket.emit('leaveSession', { sessionId, userId })
-    }
-  }
-
-  const makeVote = ({ sessionId, participants }: { sessionId: string; participants: Participant[] }) => {
-    // if (userId) {
-    socket.emit('createVote', { sessionId, participants })
-    // }
-  }
+  const router = useRouter()
 
   const endSession = useCallback(() => {
     setSessionData(defaultSession)
-    socket.disconnect()
+    socket?.disconnect()
     router.push('/')
-  }, [router, setSessionData])
-
-  const showVotes = ({ sessionId }: { sessionId: string }) => {
-    socket.emit('showVotes', { sessionId })
-  }
-
-  const clearVotes = ({ sessionId }: { sessionId: string }) => {
-    socket.emit('clearVotes', { sessionId })
-  }
+  }, [router, setSessionData, socket])
 
   useEffect(() => {
+    if (!socket) return
+
     const handleSessionUpdate = (updatedParticipants: Participant[]) => {
       console.log('🚀 Session updated:', updatedParticipants)
 
-      setSessionData(prevData => ({
-        ...prevData,
+      setSessionData(prev => ({
+        ...prev,
         participants: updatedParticipants.sort((a, b) => {
           const aHasVote = a.vote !== ''
           const bHasVote = b.vote !== ''
@@ -81,8 +48,8 @@ export const useWebSocket = () => {
     }
 
     const handleVotes = ({ isVotesVisible }: VotesData) => {
-      setSessionData(prevData => ({
-        ...prevData,
+      setSessionData(prev => ({
+        ...prev,
         isVotesVisible,
       }))
     }
@@ -93,8 +60,32 @@ export const useWebSocket = () => {
 
     return () => {
       socket.off('sessionUpdated', handleSessionUpdate)
+      socket.off('showVotes', handleVotes)
+      socket.off('clearVotes', handleVotes)
     }
-  }, [setSessionData, endSession])
+  }, [socket, setSessionData, endSession])
+
+  const joinSession = (user: User) => {
+    if (socket && isConnected) {
+      socket.emit('joinSession', user)
+    }
+  }
+
+  const leaveSession = ({ sessionId, userId }: LeaveSession) => {
+    socket?.emit('leaveSession', { sessionId, userId })
+  }
+
+  const makeVote = ({ sessionId, participants }: MakeVote) => {
+    socket?.emit('createVote', { sessionId, participants })
+  }
+
+  const showVotes = ({ sessionId }: SessionId) => {
+    socket?.emit('showVotes', { sessionId })
+  }
+
+  const clearVotes = ({ sessionId }: SessionId) => {
+    socket?.emit('clearVotes', { sessionId })
+  }
 
   return { joinSession, leaveSession, makeVote, showVotes, clearVotes }
 }

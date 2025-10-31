@@ -8,6 +8,7 @@ import { CenteredDiv, TextWithIcon } from '@/styles/Styles.style'
 import { TbUser } from 'react-icons/tb'
 import { MdOutlinePages } from 'react-icons/md'
 import { useAppContext } from '@/providers/providers'
+import { useState, useEffect } from 'react'
 
 export const Header = () => {
   const { id: sessionId } = useParams<{ id: string }>()
@@ -16,11 +17,15 @@ export const Header = () => {
     queryFn: () => fetchSession({ sessionId }),
     enabled: !!sessionId,
   })
-  const storedUserId = getCurrentUserId()
   const {
     sessionData: { participants = [] },
   } = useAppContext()
+  const [storedUserId, setStoredUserId] = useState<string | null>(null)
   const userName = participants?.find(({ userId }: { userId?: string }) => userId === storedUserId)?.participantName
+
+  useEffect(() => {
+    setStoredUserId(getCurrentUserId())
+  }, [])
 
   return (
     <S.Header>
@@ -45,7 +50,7 @@ export const Header = () => {
       </S.SessionName>
       {voting_type && (
         <S.VotingType>
-          Voting system is <S.VotingTypeName>{voting_type}</S.VotingTypeName>
+          <S.VotingTypeName>{voting_type}</S.VotingTypeName>
         </S.VotingType>
       )}
       {/* <S.Account></S.Account> */}

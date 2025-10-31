@@ -1,13 +1,20 @@
 'use client'
 
 export const storeCurrentUserId = (currentUserId: string) => {
-  window.sessionStorage.setItem('currentUserId', currentUserId)
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.setItem('currentUserId', currentUserId)
+  }
 }
 
 export const deleteCurrentUserId = () => {
-  window.sessionStorage.removeItem('currentUserId')
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.removeItem('currentUserId')
+  }
 }
 
 export const getCurrentUserId = () => {
-  return window.sessionStorage.getItem('currentUserId')
+  if (typeof window !== 'undefined') {
+    return window.sessionStorage.getItem('currentUserId')
+  }
+  return null
 }

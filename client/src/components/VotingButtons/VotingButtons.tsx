@@ -3,6 +3,8 @@ import { VscCoffee } from 'react-icons/vsc'
 
 type VotingOptions = Record<string, string[]>
 
+type VotingButtonsProps = { createVote: (vote: string) => void; votingType: string }
+
 const votingOptions: VotingOptions = {
   fibonacci: ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?', 'T'],
   // 'modified fibonacci': ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?', '☕'],
@@ -10,7 +12,7 @@ const votingOptions: VotingOptions = {
   'create custom deck': [''],
 }
 
-export const VotingButtons = ({ createVote, votingType = '' }: { createVote: (vote: string) => void; votingType: string }) => {
+export const VotingButtons = ({ createVote, votingType = '' }: VotingButtonsProps) => {
   const onVote = (vote: string) => () => {
     createVote(vote)
   }

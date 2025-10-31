@@ -3,9 +3,7 @@ import { Server } from "socket.io";
 import dotenv from "dotenv";
 import cors from "cors";
 import { createServer } from "http";
-import routes from "./routes/routes.js"; // Import the routes file
-
-// Enable CORS for all routes
+import routes from "./routes/routes.js";
 
 dotenv.config();
 
@@ -109,8 +107,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("createVote", async ({ sessionId, participants }) => {
+    console.log("🚀 ~ createVote outside if");
     if (sessions.has(sessionId)) {
+      console.log("🚀 ~ createVote inside if");
+
       sessions.set(sessionId, participants);
+      console.log("🚀 ~ sessionId:", sessionId);
+      console.log("🚀 ~ participants:", participants);
       io.to(sessionId).emit("sessionUpdated", sessions.get(sessionId));
     }
   });

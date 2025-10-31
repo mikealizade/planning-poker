@@ -5,37 +5,22 @@ export const Content = styled.div`
   display: flex;
   width: 100%;
   flex: 1;
-  position: relative;
-  z-index: 2;
-`
-export const Column = styled.div`
-  display: flex;
+
   flex-direction: column;
-  flex: 1;
-`
-export const LeftColumn = styled(Column)`
-  flex: 1;
-`
-
-export const MiddleColumn = styled(Column)`
-  flex: 3;
-  row-gap: 18px;
-`
-
-export const RightColumn = styled(Column)`
-  flex: 1;
+  row-gap: 50px;
 `
 
 export const Players = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   row-gap: 30px;
+  justify-content: center;
 `
 
 export const PlayerContainer = styled.div<{ isOdd: boolean }>`
   display: flex;
-  flex-direction: ${({ isOdd }) => (isOdd ? 'row-reverse' : 'row')};
-  row-gap: 12px;
+  flex-direction: column;
+  row-gap: 8px;
   align-items: center;
   column-gap: 12px;
   position: relative;
@@ -44,35 +29,26 @@ export const PlayerContainer = styled.div<{ isOdd: boolean }>`
 export const Player = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
   align-items: center;
   justify-content: flex-start;
 `
 
 export const PlayerStatus = styled.div<{ status: string }>`
-  background-color: #000;
   border-radius: 30px;
-  color: ${({ status }) => (status === 'Voted' ? '#716ded' : '#e83c56')};
+  color: ${({ status }) => (status === 'Voted' ? '#43d18a' : '#e83c56')};
   padding: 5px 12px;
   display: inline-flex;
   align-self: center;
   font-size: 1.15rem;
-  min-width: 90px;
+  min-width: 102px;
   justify-content: center;
   text-align: center;
+  width: 90px;
 `
 
 export const PlayerName = styled.div`
   font-size: 1.6rem;
 `
-
-// export const SessionName = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   font-size: 2rem;
-//   line-height: normal;
-// `
 
 export const ShowButton = styled(ButtonText)`
   color: #43d18a;

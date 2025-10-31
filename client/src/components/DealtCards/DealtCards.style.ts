@@ -1,56 +1,28 @@
 import styled from '@emotion/styled'
 
 export const CardsContainer = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
-  transform-origin: bottom left;
-  position: absolute;
-  top: 60px;
-  left: 0;
+  justify-content: center;
 `
 
-export const DealtCard = styled.div<{ x: number; y: number; rotation: number }>`
-  position: absolute;
-  transform-origin: bottom center;
-  transform: translate(0px, -10px) rotate(-20deg);
-  transform: ${({ x, y, rotation }) => `translate(${x}px, ${y}px) rotate(${rotation}deg)`};
-  transition: transform 0.3s ease-in-out;
+export const DealtCard = styled.div`
   background-color: #e4e5f5;
-  border-radius: 12px;
+  border-radius: 4px;
   width: 70px;
   height: 100px;
   color: #000;
   display: flex;
   flex-direction: column;
-  perspective: 1000px;
-
-  /* &:hover {
-    > div {
-      transform: rotateY(180deg);
-    }
-  } */
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
 `
 
 export const DealtCardInner = styled.div`
   position: relative;
   transition: transform 0.4s;
   transform-style: preserve-3d;
-`
-
-export const DealtCardFront = styled.div`
-  position: absolute;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
-  background-color: red;
-`
-
-export const DealtCardBack = styled.div`
-  position: absolute;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
-  background-color: green;
 `
 
 export const FlippedCard = styled.div`
@@ -82,24 +54,4 @@ export const FlippedCard = styled.div`
     left: 22px;
     top: 42px;
   }
-`
-
-export const VotingValue = styled.div<{ colour: string }>`
-  color: ${({ colour }) => colour};
-  display: flex;
-  justify-content: flex-start;
-  font-size: 2rem;
-  flex: 1;
-  padding: 10px 0 0 10px;
-  align-items: flex-start;
-  column-gap: 5px;
-  line-height: 22px;
-`
-export const VotingSuit = styled.div`
-  color: #000;
-  display: flex;
-  justify-content: flex-end;
-  align-items: end;
-  flex: 1;
-  padding: 0 10px 10px 0;
 `
