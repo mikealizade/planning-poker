@@ -11,6 +11,7 @@ export const VotesSummaryList = styled.ul`
   display: flex;
   justify-content: center;
   font-size: 1.3rem;
+  column-gap: 20px;
 `
 
 export const SummaryItem = styled.li`

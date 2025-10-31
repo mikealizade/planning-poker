@@ -4,6 +4,7 @@ export const CardsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  column-gap: 85px;
 `
 
 export const DealtCard = styled.div`

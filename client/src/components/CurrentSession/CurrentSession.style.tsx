@@ -15,6 +15,7 @@ export const Players = styled.ul`
   flex-direction: row;
   row-gap: 30px;
   justify-content: center;
+  column-gap: 35px;
 `
 
 export const PlayerContainer = styled.div<{ isOdd: boolean }>`
